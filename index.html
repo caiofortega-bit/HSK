@@ -3612,5 +3612,153 @@ window.ablock=async function(n,k){await _ab(n,k);
    const d=cs[i].querySelector('details');d?d.insertAdjacentHTML('beforebegin',h):cs[i].insertAdjacentHTML('beforeend',h)}}catch(e){fail(e)}};
 })();
 </script>
+<script>
+/* PATCH v3: frases do usuário nas aulas + formulário nas aulas + quiz da sequência com palavras da sequência
+   + nível "Adicionais" (palavras do patch) + favoritas. Colar DEPOIS do patch v2, no fim do arquivo. */
+(function(){
+const fail=(e,n)=>{console.error(e);const v=document.getElementById("vs");if(v)v.textContent="Erro no patch v3"+(n?" ("+n+")":"")+": "+(e&&e.message||e)};
+if(typeof W==="undefined"||typeof GP==="undefined"||typeof sents==="undefined"||typeof ablock==="undefined"){
+ const b=document.createElement("div");b.style.cssText="position:fixed;left:0;right:0;top:0;z-index:999;background:#b3261e;color:#fff;padding:12px;font:14px system-ui";
+ b.textContent="Patch v3 não aplicado: cole-o depois do patch v2, fora de outros blocos de script.";(document.body||document.documentElement).appendChild(b);return}
 
+/* ---------- utilidades ---------- */
+const clean=s=>String(s||'').replace(/[^\u4e00-\u9fff]/g,'');
+let _ds=null,_dn=-1;
+const dict=()=>{if(!_ds||_dn!==W.length){_ds=new Set(W.filter(w=>!w.x&&w.h&&w.h.length>1&&w.h.length<5).map(w=>w.h));_dn=W.length}return _ds};
+const tk=z=>{const c=[...clean(z)],D=dict(),o=[];let i=0;
+ while(i<c.length){let f=1;for(let k=Math.min(4,c.length-i);k>1;k--)if(D.has(c.slice(i,i+k).join(''))){f=k;break}o.push(c.slice(i,i+f).join(''));i+=f}return o};
+const tokStr=z=>{z=String(z||'').trim();return /\s/.test(z)?z.split(/\s+/).map(clean).filter(Boolean).join(' '):tk(z).join(' ')};
+
+/* ---------- favoritas ---------- */
+const FV=()=>S._fav||(S._fav={});
+const isFav=w=>!!FV()[w.i];
+const favIdx=()=>Object.keys(FV()).map(Number).filter(i=>W[i]&&!W[i].x);
+const starBtn=(w,c)=>`<button class="fvb" data-i="${w.i}" data-c="${c?1:0}" title="Favoritar palavra importante" onclick="tFav(${w.i})">${isFav(w)?'⭐':'☆'}${c?'':' Favorita'}</button>`;
+window.tFav=function(i){const f=FV();if(f[i])delete f[i];else f[i]=1;save();
+ document.querySelectorAll('.fvb[data-i="'+i+'"]').forEach(b=>{b.textContent=(f[i]?'⭐':'☆')+(b.dataset.c=='1'?'':' Favorita')})};
+try{Object.defineProperty(GP,'⭐ Favoritas',{get:favIdx,enumerable:true,configurable:true})}catch(e){fail(e,'favoritas')}
+
+/* ---------- 1) palavras do patch viram nível 4 (Adicionais) + aulas ---------- */
+try{
+ const OFF=3000,words=W.filter(w=>!w.x&&w.i>=OFF&&w.c);
+ words.forEach(w=>{w.l=4});
+ const gn=Object.keys(GP).filter(n=>/^Planilha ·/.test(n)),buck={},seen=new Set();
+ if(gn.length){
+  words.forEach(w=>{if(seen.has(w.h))return;seen.add(w.h);let best=gn[0];
+   for(let k=1;k<gn.length;k++){if((GP[gn[k]]||[]).includes(w.i)){best=gn[k];break}}
+   (buck[best]=buck[best]||[]).push(w.h)});
+  const g0=buck[gn[0]]=buck[gn[0]]||[];
+  gn.slice(1).forEach(n=>{if(buck[n]&&buck[n].length<5){g0.push(...buck[n]);delete buck[n]}});
+ }else{buck['Planilha · Geral']=[...new Set(words.map(w=>w.h))]}
+ const chunk=a=>{const k=Math.max(1,Math.ceil(a.length/40)),s=Math.ceil(a.length/k),r=[];for(let i=0;i<a.length;i+=s)r.push(a.slice(i,i+s));return r};
+ const lessons=[];
+ (gn.length?gn:Object.keys(buck)).forEach(n=>{const a=buck[n];if(!a||!a.length)return;const parts=chunk(a),sh_=n.replace(/^Planilha · /,'');
+  parts.forEach((c,p)=>lessons.push(['Adicionais · '+sh_+(parts.length>1?' ('+(p+1)+'/'+parts.length+')':''),c.join(' '),4]))});
+ const at=(()=>{const f=AU.findIndex(a=>a[3]=='c');return f<0?AU.length:f})();
+ const P=LP(),prev=P._m4||0,cnt=lessons.length,C=AU.length-at;
+ if(C>0&&prev!==cnt){const old=[];for(let k=0;k<C;k++){old[k]=P['a'+(at+prev+k)];delete P['a'+(at+prev+k)]}
+  for(let k=0;k<C;k++)if(old[k]!=null)P['a'+(at+cnt+k)]=old[k]}
+ P._m4=cnt;save();
+ AU.splice(at,0,...lessons);
+}catch(e){fail(e,'adicionais')}
+
+/* botão de nível "Adicionais" */
+try{const l=document.getElementById('lv');if(l&&!l.querySelector('[data-l="4"]'))l.insertAdjacentHTML('beforeend',' <button data-l="4">Adicionais</button>')}catch(e){fail(e,'nivel')}
+
+/* ---------- 2) aba Adicionais em Aulas ---------- */
+try{
+ const LVN2={1:'HSK 1',2:'HSK 2',3:'HSK 3',4:'Adicional','-1':'Minha aula'},LI2={1:'🌱',2:'🌿',3:'📘',4:'➕','-1':'⭐'},TH2=['👨‍👩‍👧','🍜','🧭','🌸','🏫'];
+ const lvOf=n=>AU[n][2]===undefined?3:AU[n][2],lct2=n=>Math.ceil(auw(n).length/5);
+ const lpr2=(n,P)=>{const b=P['a'+n]||0,t=lct2(n);return b>=9?t:Math.min(b,t)};
+ let ALX=0;
+ window.setAL=v=>{ALX=v;window.au()};
+ window.au=function(){const P=LP(),vis=AU.map((a,n)=>n).filter(n=>{const a=AU[n];if(a[3]=='c'&&CU.l[a[4]]&&CU.l[a[4]].d)return false;const L=lvOf(n);return ALX==0||(ALX==4?L<0:ALX==5?L==4:L==ALX)});
+  let done=0,tot=0,words=0;vis.forEach(n=>{done+=lpr2(n,P);tot+=lct2(n);words+=auw(n).length});
+  $('au').innerHTML=`<div class="hero"><div class="hero-s">Modo principal</div><div class="hero-t">Aulas</div><div class="bar" style="margin:12px 0 6px"><i style="width:${tot?100*done/tot:0}%"></i></div><div class="mut">${vis.length} aulas · ${words} palavras · ${done}/${tot} blocos feitos</div></div>
+<div class="row" style="justify-content:flex-start">${[['Todas',0],['HSK 1',1],['HSK 2',2],['HSK 3',3],['➕ Adicionais',5],['⭐ Minhas',4]].map(x=>`<button class="${ALX==x[1]?'on':''}" onclick="setAL(${x[1]})">${x[0]}</button>`).join('')}</div>
+<div class="mut" style="margin:6px 4px">Blocos de 5 palavras: primeiro você conhece as palavras com frases, depois pratica. Crie aulas suas na Biblioteca.</div>`+
+  (vis.length?vis.map(n=>{const a=AU[n],L=lvOf(n),b=P['a'+n]||0,t=lct2(n),d=lpr2(n,P);
+   return `<div class="lc" onclick="aul(${n})"><div class="lc-ic">${TH2[n]||LI2[L]||'📘'}</div><div class="lc-b"><div class="lc-n">${LVN2[L]||''} · Aula ${n+1}${b>=9?' · ✓ revisão feita':''}</div><div class="lc-t">${esc(a[0])}</div><div class="bar sm"><i style="width:${t?100*d/t:0}%"></i></div><div class="mut" style="margin-top:4px">${d}/${t} blocos · ${auw(n).length} palavras</div></div>${a[3]=='c'?`<button aria-label="Excluir aula" onclick="event.stopPropagation();delL(${a[4]})">✕</button>`:'<div class="lc-go">›</div>'}</div>`}).join(''):'<div class="card">Nenhuma aula aqui ainda.</div>')};
+}catch(e){fail(e,'aulas')}
+
+/* ---------- 3) frases do usuário como exemplos de cada palavra ---------- */
+try{
+ const userPhr=w=>{const r=[];
+  (CU.f||[]).slice().reverse().forEach(f=>{if(!f||!f[0]||!w.h)return;const zh=clean(f[0]),i=zh.indexOf(w.h);if(i<0)return;
+   const raw=String(f[0]).trim(),sp=/\s/.test(raw)?raw.split(/\s+/).map(clean).filter(Boolean):null;
+   let exact=!!(sp&&sp.includes(w.h)),tokens;
+   if(exact)tokens=sp;else tokens=[...tk(zh.slice(0,i)),w.h,...tk(zh.slice(i+w.h.length))];
+   r.push({e:exact,x:{tokens,py:'',pt:String(f[1]||''),u:1}})});
+  return r.sort((a,b)=>(b.e?1:0)-(a.e?1:0)).slice(0,3).map(o=>o.x)};
+ const _s=window.sents;
+ window.sents=async function(w){const base=await _s(w),us=userPhr(w);if(!us.length)return base;
+  const key=x=>x.tokens.join(''),ks=new Set(us.map(key));return us.concat(base.filter(x=>!ks.has(key(x))))};
+
+ /* formulário de frase dentro de cada palavra da aula */
+ window.addPW=function(i){const l=lsc;if(!l)return;const w=l.ws[i];if(!w)return;
+  const zEl=document.getElementById('apz'+i),tEl=document.getElementById('apt'+i),m=document.getElementById('apm'+i);if(!zEl||!tEl||!m)return;
+  const z=zEl.value.trim(),t=tEl.value.trim(),c=clean(z);
+  if(!c||!t){m.textContent='Preencha a frase em chinês e a tradução.';return}
+  if(!c.includes(w.h)){m.textContent='A frase precisa conter '+w.h+'.';return}
+  if(F.some(f=>clean(f[0])==c)){m.textContent='Essa frase já existe na biblioteca.';return}
+  const s=tokStr(z);F.push([s,t]);CU.f.push([s,t]);saveCU();
+  ablock(l.n,l.k)};
+ const _ab=window.ablock;
+ window.ablock=async function(n,k){await _ab(n,k);
+  try{const l=lsc;if(!l||l.n!=n||l.k!=k)return;const cs=document.querySelectorAll('#ai .wd');
+   cs.forEach((card,i)=>{const w=l.ws[i];if(!w||card.querySelector('.addp'))return;const has=!!card.querySelector('.sen');
+    const body=`<input class="in" id="apz${i}" autocomplete="off" placeholder="Frase em chinês com ${esc(w.h)}"><input class="in" id="apt${i}" autocomplete="off" placeholder="Tradução em português"><button class="pri" onclick="addPW(${i})">Adicionar frase</button><div class="mut" id="apm${i}"></div>`;
+    card.insertAdjacentHTML('beforeend',has?`<details class="addp" style="margin-top:8px"><summary>+ Adicionar outra frase com ${esc(w.h)}</summary>${body}</details>`
+     :`<div class="addp" style="margin-top:8px"><div class="mut"><b>Sem frase de exemplo ainda.</b> Adicione uma com ${esc(w.h)}:</div>${body}</div>`)})
+  }catch(e){fail(e,'form')}};
+}catch(e){fail(e,'frases')}
+
+/* ---------- 4) quiz da sequência: distratores vêm da própria sequência ---------- */
+try{
+ window.fmc=function(pr,lab){const w=cw,fld=lab[0]===w.t?'t':'h';
+  const pl=sh(Object.keys(sc||{}).map(i=>W[i]).filter(x=>x&&!x.x&&x.i!==w.i));
+  const seen=new Set([lab[0]]),d=[];
+  pl.forEach(x=>{const v=x[fld];if(d.length<3&&v&&!seen.has(v)){seen.add(v);d.push(v)}});
+  lab.slice(1).forEach(v=>{if(d.length<3&&!seen.has(v)){seen.add(v);d.push(v)}});
+  const o=sh([lab[0],...d].map((l,k)=>({l,ok:k===0})));
+  $('ft').innerHTML=`<div class="mut">${fk+1}/${ft.length}</div><div class="card"><div class="row" style="justify-content:flex-end;margin:0">${starBtn(w)}</div>${pr}</div>`+
+   o.map(x=>`<button class="opt" data-ok="${+x.ok}" onclick="fans(this)">${esc(x.l)}</button>`).join('')+'<div id="fx"></div>'};
+}catch(e){fail(e,'fmc')}
+
+/* ---------- 5) Quiz / Escuta com favoritas ---------- */
+try{
+ let favOnly=false;
+ window.togFO=function(mode,el){favOnly=!favOnly;mc(mode,el)};
+ window.mc=function(mode,el){
+  let p=pool();const fv=p.filter(isFav);if(favOnly&&fv.length)p=fv;
+  let a=p[Math.random()*p.length|0];
+  if(!favOnly&&fv.length&&Math.random()<.3)a=fv[Math.random()*fv.length|0];
+  for(let t=0;t<4&&q&&a&&a.i===q.i&&p.length>1;t++)a=p[Math.random()*p.length|0];
+  if(!a){$(el).innerHTML='<div class="card">Nenhuma palavra neste nível.</div>';return}
+  const dir=mode=='l'||Math.random()<.5;
+  let o=[a],guard=0;
+  while(o.length<4&&guard++<2000){const x=W[Math.random()*W.length|0];if(x&&!x.x&&x.h!=a.h&&x.t!=a.t&&!o.some(y=>y.h==x.h||y.t==x.t))o.push(x)}
+  o.sort(()=>Math.random()-.5);q=a;
+  const top=(mode=='q'?`<button onclick="help=!help;mc('q','qz')">Pinyin e som: ${help?'ligados':'desligados'}</button> `:'')+
+   (fv.length?`<button class="${favOnly?'on':''}" onclick="togFO('${mode}','${el}')">⭐ Só favoritas (${fv.length})</button>`:'');
+  $(el).innerHTML=hd(top)+
+   `<div class="card"><div class="row" style="justify-content:flex-end;margin:0">${starBtn(a)}</div>${mode=='l'?`<button class="pri" onclick="say(q.h)">🔊 Ouvir de novo</button><div class="mut">O que significa?</div>`:`<div class="hz" style="font-size:${dir?56:28}px">${esc(dir?a.h:a.t)}</div>${dir&&help?`<div class="py" style="font-size:18px">${esc(a.p)}</div>`:''}`}<div id="fb"></div></div>`+
+   o.map(x=>`<button class="opt" data-ok="${x===a?1:0}" onclick="pick(this,'${mode}','${el}')">${esc(dir?x.t:x.h+(help?' · '+x.p:''))}</button>`).join('')+
+   `<div class="row" id="nx"></div><div id="lg">${logv()}</div>`;
+  if(mode=='l'||(dir&&help))say(a.h)};
+}catch(e){fail(e,'mc')}
+
+/* ---------- 6) Biblioteca: estrela + rótulo "Adicional" ---------- */
+try{
+ const _l=window.lbl;
+ window.lbl=function(){_l();
+  document.querySelectorAll('#ll .lw').forEach(el=>{const m=el.querySelector('.lw-m'),x=m&&/foco1\((\d+)\)/.exec(m.getAttribute('onclick')||''),a=el.querySelector('.lw-a');
+   if(!x||!W[+x[1]])return;const w=W[+x[1]];
+   if(a&&!a.querySelector('.fvb'))a.insertAdjacentHTML('afterbegin',starBtn(w,true));
+   el.querySelectorAll('.tg').forEach(t=>{if(/^HSK 4/.test(t.textContent))t.textContent='Adicional'})})};
+}catch(e){fail(e,'biblioteca')}
+
+try{window.show()}catch(e){fail(e,'show')}
+})();
+</script>
 </html>
