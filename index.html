@@ -70,6 +70,7 @@ body[data-nav="13"] #meta,body[data-nav="7"] #meta,body[data-nav="5"] #meta,body
 .lw{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:10px 12px;margin:8px 0;box-shadow:var(--sh)}.lw input{width:22px;height:22px;margin-top:8px;flex:none;accent-color:var(--ac)}.lw-m{flex:1;min-width:0;cursor:pointer}.lw-h{font-size:28px;line-height:1.2}.lw-e{font-size:20px;margin-left:8px}.lw-a{display:flex;flex-direction:column;gap:6px}.lw-a button{padding:6px 10px;min-height:36px}.lw-t{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.tg{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--ln);color:var(--mut)}.tg.s1{color:#b07a10;border-color:#e0a030}.tg.s2{color:#2f6db0;border-color:#4a90d9}.tg.s3{color:var(--ok);border-color:var(--ok)}.tg.er{color:var(--ac);border-color:var(--ac)}
 .stk{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--ln);margin:8px 0}.stk i{display:block;height:100%}.dgl{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mut)}.dgl i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}.dgr{display:flex;align-items:center;gap:8px}.dgr button{padding:4px 10px;min-height:36px}
 .dc{margin-top:8px}.dcg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.dcp{flex:1 1 84px;min-width:84px;max-width:150px;text-align:center;border:1px solid var(--ln);border-radius:12px;padding:8px 6px;background:var(--bg);cursor:pointer}.dcp:active{transform:scale(.97)}.dch{font-size:34px;line-height:1.2}.dcp .py{font-size:16px}.dcs{font-size:14px;color:var(--mut)}.dcs b{color:var(--fg)}
+.phs .dcp{flex:0 0 100px;min-height:100px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-width:2px;border-radius:14px}.phs .dcp .mut{font-size:12px;line-height:1.2;margin-top:2px}.phs .dcp .py{font-size:15px}body[data-nav="17"] #meta{display:none}
 </style></head><body><div id="ov" onclick="dwt(0)"></div><aside id="dw"></aside>
 <main>
 <div id="top"><button id="mb" aria-label="Menu" onclick="dwt(1)">☰</button><b id="ttl"></b><span style="flex:1"></span><button id="snd" aria-label="Testar som" onclick="say('你好，欢迎学习汉语。')">🔊</button></div><div id="vs"></div>
@@ -121,7 +122,7 @@ function say(t){try{const Y=window.speechSynthesis;if(!Y){vst();return}
  if(Y.speaking||Y.pending)Y.cancel();if(Y.paused)Y.resume();
  const v=ZV||pickV(),ps=String(t).match(/[^。！？!?]+[。！？!?]?/g)||[String(t)];
  setTimeout(()=>ps.forEach(x=>{const u=new SpeechSynthesisUtterance(x.trim());u.lang=v?v.lang:'zh-CN';if(v)u.voice=v;u.rate=.8;Y.speak(u)}),80)}catch(e){}}
-const tabs=['Cartões','Quiz','Escuta','Frases','Escrever','HSKK 1','Gramática','Exame','Biblioteca de palavras e frases','Sequência','Desenhar','Leitura','Trilha de escrita ✍','Aulas','Imagens 🖼'];
+const tabs=['Cartões','Quiz','Escuta','Frases','Escrever','HSKK 1','Gramática','Exame','Biblioteca de palavras','Sequência','Desenhar','Leitura','Trilha de escrita ✍','Aulas','Imagens 🖼'];
 const MG=[['Principal',[13]],['Praticar',[0,1,2,14,3,4,10,11]],['Trilhas e provas',[12,9,5,6,7]],['Biblioteca',[8]]];
 $('dw').innerHTML=MG.map(g=>`<h3>${g[0]}</h3>`+g[1].map(i=>`<button data-i="${i}">${tabs[i]}</button>`).join('')).join('');
 function dwt(o){$('dw').classList.toggle('open',!!o);$('ov').style.display=o?'block':'none'}
@@ -168,7 +169,10 @@ function pick(b,mode,el){const ok=b.dataset.ok==1;document.querySelectorAll('.op
  $('fb').innerHTML=`<div style="color:var(--${ok?'ok':'ac'})"><b>${ok?'✓ Acertou':'✗ Errou'}</b></div><div class="hz" style="font-size:32px">${q.h}</div><div class="py" style="font-size:18px">${q.p}</div><div>${q.t}</div>`;
  $('nx').innerHTML=`<button class="pri" onclick="mc('${mode}','${el}')">Próxima</button>`}
 const quiz=()=>mc('q','qz'),listen=()=>mc('l','ls');
+const EXTRA_PHRASES=[
+['我每天喝水','Eu bebo água todos os dias.'],['你想吃什么','O que você quer comer?'],['我喜欢看电影','Gosto de assistir a filmes.'],['我们一起去学校','Vamos juntos à escola.'],['他今天很忙','Ele está ocupado hoje.'],['明天我去上班','Amanhã vou trabalhar.'],['她正在看书','Ela está lendo.'],['我已经吃饭了','Já comi.'],['请再说一次','Por favor, diga novamente.'],['你会说汉语吗','Você sabe falar chinês?'],['我不知道这个问题','Não sei essa questão.'],['这个东西很便宜','Esta coisa é barata.'],['那家饭馆很好','Aquele restaurante é muito bom.'],['我想买一件衣服','Quero comprar uma peça de roupa.'],['今天的天气很好','O clima hoje está muito bom.'],['他住在北京','Ele mora em Pequim.'],['我坐公共汽车去','Vou de ônibus.'],['请给我一杯茶','Por favor, me dê uma xícara de chá.'],['她比我高','Ela é mais alta que eu.'],['我觉得这个很有意思','Acho isso muito interessante.'],['因为下雨所以我在家','Como está chovendo, fico em casa.'],['如果有时间我们去玩','Se tivermos tempo, vamos passear.'],['你什么时候回来','Quando você volta?'],['我对中国文化感兴趣','Tenho interesse na cultura chinesa.'],['他忘记带手机了','Ele esqueceu de trazer o celular.'],['我们在公园见面','Vamos nos encontrar no parque.'],['请帮我一下','Por favor, me ajude um pouco.'],['我需要学习汉语','Preciso estudar chinês.'],['她正在做饭','Ela está cozinhando.'],['周末我打算休息','Pretendo descansar no fim de semana.'],['这本书比那本书好','Este livro é melhor que aquele.'],['我刚刚到家','Acabei de chegar em casa.'],['老师告诉我一个办法','O professor me contou uma solução.'],['你可以坐在这里','Você pode sentar aqui.'],['我们先吃饭然后看电影','Vamos comer primeiro e depois assistir ao filme.'],['虽然很难但是我喜欢','Embora seja difícil, eu gosto.'],['请把门关上','Por favor, feche a porta.'],['我每天练习写汉字','Pratico escrever hanzi todos os dias.'],['他终于完成了工作','Ele finalmente terminou o trabalho.'],['你觉得怎么样','O que você acha?']];
 const F=[['我 昨天 突然 发烧 了','Ontem tive febre de repente.'],['虽然 他 很 累 但是 很 开心','Embora ele esteja cansado, está feliz.'],['请 把 护照 给 我','Por favor, me dê o passaporte.'],['他 一边 听 音乐 一边 打扫 屋子','Ele limpa a casa enquanto ouve música.'],['我 的 自行车 被 邻居 借 走 了','Minha bicicleta foi emprestada pelo vizinho.'],['如果 明天 下雨 我 就 不 去 公园','Se chover amanhã, não vou ao parque.'],['学校 附近 有 一 个 银行','Perto da escola há um banco.'],['我 终于 完成 了 作业','Finalmente terminei a lição de casa.'],['你 对 音乐 感兴趣 吗','Você tem interesse em música?'],['天气 越来越 冷 了','O tempo está cada vez mais frio.'],['她 比 我 聪明','Ela é mais inteligente que eu.'],['我 打算 周末 去 爬 山','Pretendo escalar a montanha no fim de semana.'],['他 只能 坐 高铁 去 北京','Ele só pode ir a Pequim de trem de alta velocidade.'],['因为 他 迟到 了 所以 老师 很 生气','Como ele se atrasou, o professor ficou bravo.']];
+F.push(...EXTRA_PHRASES);
 CU.f.forEach(x=>F.push(x));let fq,fa,fp;
 function build(){fq=F[Math.random()*F.length|0];fa=[];fp=fq[0].split(' ').map((t,i)=>({t,i})).sort(()=>Math.random()-.5);bd('')}
 function bd(m){$('bdv').innerHTML=`<div class="card"><div class="mut">Monte a frase em chinês:</div><div>${fq[1]}</div><div class="row" style="min-height:48px">${fa.map(c=>`<button class="pri" onclick="bm(${c.i},0)">${c.t}</button>`).join('')}</div></div><div class="row">${fp.map(c=>`<button onclick="bm(${c.i},1)">${c.t}</button>`).join('')}</div><div class="row"><button class="pri" onclick="bc()">Conferir</button><button onclick="build()">Outra frase</button></div><div class="card" style="display:${m?'block':'none'}">${m}</div>`}
@@ -197,9 +201,9 @@ function lib(){const p=pool(),d=p.filter(w=>lvl(w)=='Dominada').length,cg=Object
 <div class="row" style="justify-content:flex-start"><button class="${LGO?'on':''}" onclick="LGO=!LGO;lib()">🗂️ Grupos${lgp?' · '+esc(lgp):''} ${LGO?'▴':'▾'}</button>${lgp?'<button onclick="lgp=\'\';lib()">✕ limpar grupo</button>':''}</div>${LGO?`<div class="row" style="justify-content:flex-start"><button class="${lgp?'':'on'}" onclick="lgp='';lib()">Todos</button>${gnames().map(n=>`<button class="${lgp==n?'on':''}" data-g="${esc(n)}" onclick="lgp=this.dataset.g;lib()">${esc(n)} (${gl(n).length})</button>`).join('')}</div>`:''}
 ${lgp?`<div class="row"><button onclick="sel=gl(lgp);usel();lbl()">Selecionar todas</button><button class="pri" onclick="sel=sh(gl(lgp)).slice(0,10);nav=9;show()">Treinar este grupo</button><button onclick="sel=gl(lgp).slice(0,40);mkL(lgp)">📘 Virar aula</button>${CU.g[lgp]?'<button onclick="delG(lgp)">Excluir grupo</button>':''}</div>`:''}
 <details><summary>+ Adicionar palavra</summary><input class="in" id="aw1" placeholder="Hanzi"><input class="in" id="aw2" placeholder="Pinyin (opcional)"><input class="in" id="aw3" placeholder="Significado em português"><select class="in" id="aw4"><option>1</option><option>2</option><option selected>3</option></select><button class="pri" onclick="addW()">Adicionar</button></details>
-<details><summary>+ Adicionar frase (${CU.f.length})</summary><input class="in" id="af1" placeholder="Frase em chinês, palavras separadas por espaço"><input class="in" id="af2" placeholder="Tradução em português"><button class="pri" onclick="addF()">Adicionar</button>${CU.f.map((f,k)=>`<div class="item">${esc(f[0].replace(/ /g,''))} · ${esc(f[1])} <button onclick="delF(${k})">✕</button></div>`).join('')}</details>
+
 <details><summary>+ Criar aula com as selecionadas</summary><input class="in" id="ln" placeholder="Nome da aula (ex.: Palavras da viagem)"><button class="pri" onclick="mkL()">Criar aula</button><div class="mut">Marque de 5 a 40 palavras na lista. A aula aparece em Aulas › Minhas.</div></details>
-<details><summary>+ Grupos</summary><input class="in" id="gn" placeholder="Nome do novo grupo (ex.: Animais do zoológico)"><button class="pri" onclick="mkG($('gn').value.trim())">Criar com as selecionadas</button>${cg.length?`<select class="in" id="gs">${cg.map(n=>`<option>${esc(n)}</option>`).join('')}</select><button onclick="mkG($('gs').value)">Adicionar selecionadas ao grupo</button>`:''}</details><details open><summary>📚 Biblioteca de frases · explorar, decompor e filtrar</summary><input class="in" id="fqsearch" placeholder="Buscar frase, hanzi, pinyin ou tradução" oninput="phraseLib(this.value)"><div id="phrases"></div></details><div class="mut" id="am"></div><div id="ll"></div>`;usel();lbl();phraseLib('')}
+<details><summary>+ Grupos</summary><input class="in" id="gn" placeholder="Nome do novo grupo (ex.: Animais do zoológico)"><button class="pri" onclick="mkG($('gn').value.trim())">Criar com as selecionadas</button>${cg.length?`<select class="in" id="gs">${cg.map(n=>`<option>${esc(n)}</option>`).join('')}</select><button onclick="mkG($('gs').value)">Adicionar selecionadas ao grupo</button>`:''}</details><div class="mut" id="am"></div><div id="ll"></div><div class="card mut">🧩 As frases agora ficam na aba <b>Biblioteca de frases</b>. <button class="pri" onclick="nav=17;show()">Abrir</button></div>`;usel();lbl()}
 function usel(){$('lsb').innerHTML=`${sel.length} selecionada(s) <button class="pri" onclick="nav=9;show()">Treinar sequência</button> <button onclick="sel=[];lib()">Limpar</button>`}
 function tg(i){sel=sel.includes(i)?sel.filter(x=>x!=i):sel.concat(i);usel()}
 function foco1(i){sel=[i];nav=9;show()}
@@ -209,11 +213,14 @@ function addW(){const h=$('aw1').value.trim(),p=$('aw2').value.trim(),t=$('aw3')
  if(!h||!t){$('am').textContent='Preencha o hanzi e o significado.';return}
  W.push({i:W.length,h,p,t,l,c:1});CU.w.push([h,p,t,l]);saveCU();lib();$('am').textContent='Palavra adicionada: vale para todos os modos.'}
 function delW(i){W[i].x=1;CU.del.push(i);sel=sel.filter(x=>x!=i);Object.keys(CU.g).forEach(n=>CU.g[n]=CU.g[n].filter(x=>x!=i));saveCU();lib()}
-function addF(){const f=$('af1').value.trim().replace(/\s+/g,' '),t=$('af2').value.trim();
- if(f.split(' ').length<2||!t){$('am').textContent='Separe as palavras da frase com espaço e preencha a tradução.';return}
- F.push([f,t]);CU.f.push([f,t]);saveCU();lib();$('am').textContent='Frase adicionada ao modo Frases.'}
+function addF(){const raw=$('af1').value.trim(),t=$('af2').value.trim();const f=raw.replace(/\s+/g,' ').trim();
+ if(!f||!t){$('am').textContent='Preencha a frase em chinês e a tradução.';return}
+ F.push([f,t]);CU.f.push([f,t]);saveCU();phraseLib($('fqsearch')?.value||'');$('am').textContent='Frase adicionada à biblioteca de frases.';$('af1').value='';$('af2').value=''}
 function delF(k){F.splice(F.length-CU.f.length+k,1);CU.f.splice(k,1);saveCU();lib()}
-function phraseLib(q=''){const el=$('phrases');if(!el)return;const all=F.map((f,i)=>({f,i,custom:i>=F.length-CU.f.length}));const z=String(q||'').toLowerCase();const list=all.filter(x=>(x.f[0]+x.f[1]+pyl(x.f[0])).toLowerCase().includes(z));el.innerHTML=list.map(x=>{const words=x.f[0].split(/\s+/);return `<div class="item"><div style="font-size:22px;cursor:pointer" onclick="say('${esc(x.f[0].replace(/\s/g,''))}')">${esc(x.f[0].replace(/\s/g,''))} <button onclick="event.stopPropagation();say('${esc(x.f[0].replace(/\s/g,''))}')">🔊</button></div><div class="py">${esc(pyl(x.f[0]))}</div><div>${esc(x.f[1])}</div><details><summary>Decompor frase</summary><div class="row" style="justify-content:flex-start">${words.map(w=>`<button onclick="say('${esc(w)}')">${esc(w)}</button>`).join('')}</div><div class="mut">Palavras separadas:</div><div>${words.map(esc).join(' · ')}</div>${words.map(w=>window.decH?window.decH({h:w,p:W.find(a=>!a.x&&a.h==w)?.p||pyl(w),t:x.f[1]}):'').join('')}</details></div>`}).join('')||'<div class="mut">Nenhuma frase encontrada.</div>'}
+function phraseLib(q=''){const el=$('phrases');if(!el)return;const all=F.map((f,i)=>({f,i,custom:i>=F.length-CU.f.length}));const z=String(q||'').toLowerCase();const list=all.filter(x=>(x.f[0]+x.f[1]+pyl(x.f[0])).toLowerCase().includes(z));el.innerHTML=list.map(x=>{const sentence=x.f[0].replace(/\s/g,'');const chars=[...sentence];return `<div class="item"><div style="font-size:22px">${esc(sentence)} <button onclick="say('${esc(sentence)}')">🔊</button></div><div class="py">${esc(pyl(sentence))}</div><div>${esc(x.f[1])}</div><details><summary>Decompor frase · hanzi por hanzi</summary><div class="row" style="justify-content:flex-start;flex-wrap:wrap">${chars.map((c,j)=>`<button onclick="say('${esc(c)}')" title="Ouvir ${esc(c)}">${esc(c)} 🔊</button>`).join('')}</div><div class="py">${esc(pyl(sentence))}</div><div>${esc(x.f[1])}</div></details><button class="pri" onclick="phraseOrder(${x.i})">🔀 Sequenciar palavras desta frase</button>${x.custom?`<button onclick="delF(${x.i-(F.length-CU.f.length)})">Excluir frase</button>`:''}</div>`}).join('')||'<div class="mut">Nenhuma frase encontrada.</div>'}
+window.phraseOrder=function(idx){const f=F[idx];if(!f)return;const sentence=f[0].trim(),toks=sentence.includes(' ')?sentence.split(/\s+/):[...sentence];let shuffled=toks.slice().sort(()=>Math.random()-.5);window._po={f,toks,chosen:[]};$('phrases').insertAdjacentHTML('beforeend',`<div class="card" id="po"><h3>Monte a frase</h3><div class="mut">Escolha as palavras na ordem correta:</div><div id="poout" style="font-size:22px;min-height:35px"></div><div class="row">${shuffled.map((w,i)=>`<button onclick="poPick(${i})" id="pow${i}">${esc(w)}</button>`).join('')}</div><div class="row"><button class="pri" onclick="poCheck()">Conferir</button><button onclick="phraseOrder(${idx})">Recomeçar</button></div><div id="pofb"></div></div>`) };
+window.poPick=function(i){const b=$('pow'+i),o=window._po;if(!o||b.disabled)return;b.disabled=true;o.chosen.push(b.textContent);$('poout').textContent=o.chosen.join(o.toks.length===o.f[0].length?'':' ') };
+window.poCheck=function(){const o=window._po;if(!o)return;const compact=a=>a.join('').replace(/\s/g,'');const ok=compact(o.chosen)==compact(o.toks);$('pofb').innerHTML=ok?'✓ Correto!':'Ainda não. Confira o modelo abaixo.'+(ok?'':`<div class="mut">${esc(o.f[0])}</div>`)};
 
 function mkG(n){if(!n||GP[n]){$('am').textContent='Nome inválido ou já usado por um grupo pronto.';return}if(!sel.length){$('am').textContent='Marque palavras na lista primeiro.';return}
  const c=CU.g[n]||(CU.g[n]=[]);sel.forEach(i=>c.includes(i)||c.push(i));saveCU();lgp=n;lib()}
@@ -390,7 +397,7 @@ let pq={};
 function eprova(){$('es').innerHTML=`<button onclick="es()">← Trilha</button><h2>Treino de prova</h2><div class="mut">Baseado no HSK 3: leitura 51–60 (completar com banco A–F) e escrita 71–80 (ordenar palavras e escrever o hanzi do pinyin). No exame, a parte de escrita tem 10 questões em 15 minutos.</div><div class="card lv" onclick="ptf()"><b>Verdadeiro ou falso com áudio (11–20)</b><div class="mut">só o áudio; hanzi, pinyin e tradução opcionais</div></div><div class="card lv" onclick="p51()"><b>Completar a frase (51–60)</b><div class="mut">banco de 6 palavras, A a F</div></div><div class="card lv" onclick="p76()"><b>Escrever o hanzi (76–80)</b><div class="mut">digite o hanzi a partir do pinyin</div></div><div class="card lv" onclick="nav=3;show()"><b>Ordenar palavras (71–75)</b><div class="mut">abre o modo Frases</div></div>`}
 function p51(){const bank=[],items=sh(F).slice(0,5).map(f=>{const t=f[0].split(' '),k=t.findIndex(x=>W.some(w=>w.h==x)),i=k<0?0:k,ans=t[i];bank.push(ans);return{pre:t.slice(0,i).join(''),post:t.slice(i+1).join(''),ans,pt:f[1]}});
  bank.push(sh(W.filter(w=>!w.x&&!bank.includes(w.h)))[0].h);const b=sh(bank);pq={items,b};
- $('es').innerHTML=`<button onclick="eprova()">← Prova</button><h2>Complete a frase (como 51–55)</h2><div class="card">${b.map((x,i)=>`<b>${'ABCDEF'[i]}</b> ${esc(x)}`).join(' &nbsp; ')}</div>`+items.map((it,i)=>`<div class="card" style="text-align:left"><div style="font-size:20px">${i+51}. ${esc(it.pre)}（ <select class="in" style="width:auto" id="ps${i}"><option value="">–</option>${b.map((x,j)=>`<option value="${j}">${'ABCDEF'[j]}</option>`).join('')}</select> ）${esc(it.post)}</div><div class="mut">${esc(it.pt)}</div></div>`).join('')+`<div class="row"><button class="pri" onclick="p51c()">Conferir</button><button onclick="p51()">Novo conjunto</button></div><div id="pr"></div>`}
+ $('es').innerHTML=`<button onclick="eprova()">← Prova</button><h2>Complete a frase (como 51–55)</h2><label><input type="checkbox" id="hidept" onchange="pq.hidept=this.checked;p51()" ${pq.hidept?'checked':''}> Ocultar tradução das questões</label><div class="card">${b.map((x,i)=>`<b>${'ABCDEF'[i]}</b> ${esc(x)}`).join(' &nbsp; ')}</div>`+items.map((it,i)=>`<div class="card" style="text-align:left"><div style="font-size:20px">${i+51}. ${esc(it.pre)}（ <select class="in" style="width:auto" id="ps${i}"><option value="">–</option>${b.map((x,j)=>`<option value="${j}">${'ABCDEF'[j]}</option>`).join('')}</select> ）${esc(it.post)}</div>${pq.hidept?'':`<div class="mut">${esc(it.pt)}</div>`}</div>`).join('')+`<div class="row"><button class="pri" onclick="p51c()">Conferir</button><button onclick="p51()">Novo conjunto</button></div><div id="pr"></div>`}
 function p51c(){let ok=0;pq.items.forEach((it,i)=>{const v=$('ps'+i).value,g=v!==''&&pq.b[+v]==it.ans;if(g)ok++;$('ps'+i).style.borderColor=g?'var(--ok)':'var(--ac)'});$('pr').innerHTML=`${ok}/${pq.items.length} · respostas: ${pq.items.map((it,i)=>(i+51)+' '+esc(it.ans)).join(' · ')}`}
 function p76(){const it=[];sh(F).some(f=>{const t=f[0].split(' '),c=t.map((x,i)=>({x,i})).filter(o=>W.some(w=>!w.x&&w.h==o.x&&w.p));if(c.length){const o=c[Math.random()*c.length|0],w=W.find(w=>!w.x&&w.h==o.x&&w.p);it.push({pre:t.slice(0,o.i).join(''),post:t.slice(o.i+1).join(''),ans:o.x,p:w.p,pt:f[1],w})}return it.length>=5});pq={items:it,done:false};
  $('es').innerHTML=`<button onclick="eprova()">← Prova</button><h2>Escreva o hanzi (como 76–80)</h2><div class="mut">Digite o hanzi que falta, guiado pelo pinyin entre parênteses.</div>`+it.map((o,i)=>`<div class="card" style="text-align:left"><div style="font-size:20px">${i+76}. ${esc(o.pre)}（ ${esc(o.p)} ）${esc(o.post)}</div><div class="mut">${esc(o.pt)}</div><input class="in" id="pw${i}" autocomplete="off" placeholder="hanzi"></div>`).join('')+`<div class="row"><button class="pri" onclick="p76c()">Conferir</button><button onclick="p76()">Novo conjunto</button></div><div id="pr"></div>`}
@@ -587,7 +594,7 @@ window.show();
 })();
 </script><script>
 (function(){
-const CM={};`谢:agradecer;客:hóspede;气:ar, atitude;系:relação;见:ver, encontrar;们:plural de pessoas;什:o quê;么:sufixo de pergunta;儿:sufixo diminutivo (erhua);怎:como;学:estudar;习:praticar;工:trabalho;作:fazer, trabalho;喜:gostar;欢:alegre;校:escola;师:mestre;生:vida, nascer;朋:amigo;友:amigo;今:hoje, agora;天:dia, céu;明:claro, amanhã;昨:ontem;现:atual;饭:refeição, arroz;苹:maçã;果:fruta;话:fala;脑:cérebro;医:medicina;院:instituição, pátio;因:causa;所:lugar, o que;以:com, por meio de;但:mas;已:já;经:passar por;非:não (forte);觉:sentir;知:saber;道:caminho;告:informar;诉:contar;帮:ajudar;助:auxiliar;旁:lado;边:borda, lado;便:conveniente;宜:adequado;漂:bonito;亮:brilhante;兴:ânimo;病:doença;面:rosto, lado;公:público;共:em comum;汽:vapor;车:veículo;租:alugar;手:mão;晚:tarde, noite;午:meio-dia;时:tempo;候:momento;阿:prefixo afetivo;姨:tia materna;安:seguro, calmo;静:quieto;全:inteiro;班:turma;级:nível, série;法:método;半:metade;报:jornal, relatar;方:direção, lugar;笔:caneta;较:comparar;如:como;赛:competição;必:certamente;须:dever;成:tornar-se;化:transformar;表:mostrar, tabela;演:atuar;宾:hóspede;馆:edifício;激:estimular;凌:gelo;箱:caixa;同:igual;单:lista, simples;参:participar;衬:forro;衫:camisa;绩:resultado;城:cidade;迟:atrasado;初:início;除:excluir;春:primavera;词:palavra;典:referência;聪:esperto;打:bater, fazer;算:calcular;概:aproximação;熊:urso;衣:roupa;担:carregar;心:coração;蛋:ovo;糕:bolo;当:ser, quando;然:assim;处:lugar;分:dividir, ponto;图:figura, mapa;梯:escada;冬:inverno;动:mover;物:coisa;裤:calça;锻:forjar;炼:refinar, treinar;而:e, mas;且:além disso;耳:orelha;朵:contador de orelhas/flores;烧:queimar;展:expandir;房:casa;假:folga;夫:marido;妻:esposa;服:vestir, servir;务:serviço;附:junto;复:repetir;净:limpo;感:sentir;趣:interesse;冒:emitir;铁:ferro;根:raiz, base;据:evidência;故:antigo, motivo;事:assunto;于:em, sobre;注:atenção;国:país;害:prejudicar;号:número;码:código;合:combinar;适:adequar;板:tábua;绿:verde;后:depois, atrás;护:proteger;花:flor;画:desenhar, pintura;迎:receber;环:redor;境:fronteira, ambiente;黄:amarelo;色:cor;答:responder;议:discutir;者:quem faz;乎:partícula;期:período;坚:firme;持:manter;检:inspecionar;简:simples;健:saudável;康:saúde;结:atar, concluir;婚:casamento;目:olho, item;束:feixe, amarrar;解:desatar, explicar;决:decidir;姐:irmã mais velha;妹:irmã mais nova;理:razão, gerir;定:fixar;文:texto, escrita;空:vazio, ar;调:ajustar;筷:hashi;矿:mineral;泉:fonte;自:de, si mesmo;礼:cortesia;历:percorrer;史:história;凉:fresco;邻:vizinho;居:morar;留:ficar;楼:prédio, andar;口:boca, entrada;满:cheio;意:intenção;前:frente;名:nome;男:homem;轻:leve;努:esforçar;力:força;女:mulher;拍:bater, filmar;盘:prato;啤:cerveja;平:plano, calmo;瓶:garrafa;奇:raro;怪:estranho;其:seu, esse;实:real;铅:chumbo, grafite;清:claro;楚:nítido;秋:outono;球:bola;场:campo;裙:saia;情:sentimento;认:reconhecer;容:conter;易:fácil;沙:areia;勺:colher;身:corpo;活:viver;音:som;世:geração, mundo;界:limite;叔:tio;数:número;司:administrar;阳:sol;特:especial;提:levantar;体:corpo;育:educar;头:cabeça;突:súbito;语:idioma;网:rede;忘:esquecer;卫:proteger;间:espaço, entre;屋:cômodo;瓜:melão;惯:costume;澡:banho;夏:verão;香:perfume;蕉:banana;相:mutuamente;区:área;闻:ouvir;鲜:fresco;李:ameixa, bagagem;休:descansar;需:precisar;择:selecionar;求:pedir;样:aparência;般:tipo;直:reto;乐:música, alegria;银:prata;饮:beber;料:material;应:dever;影:sombra, imagem;响:ressoar;邮:correio;游:passear, nadar;戏:brincar, teatro;羽:pena;言:fala;雨:chuva;遇:encontrar;愿:desejar;运:mover, sorte;咱:nós;顾:cuidar;片:fatia, cartão;终:fim;重:pesado, importante;周:semana, ciclo;末:fim;主:principal;业:atividade;商:comércio;店:loja;火:fogo;京:capital;星:estrela;钟:sino, relógio;爸:pai;妈:mãe;杯:copo;视:ver;汉:chinês (han);桌:mesa;椅:cadeira;睡:dormir;识:conhecer;第:ordinal;正:certo, justamente;教:ensinar;左:esquerda;右:direita;早:cedo;哥:irmão mais velho;弟:irmão mais novo;丈:senhor;孩:criança;肉:carne;奶:leite;咖:som de "café";啡:som de "café";眼:olho;睛:olho;考:testar;思:pensar;颜:rosto, cor;条:tira;跑:correr;步:passo;准:exato, permitir;备:preparar;始:começar;介:intermediar;绍:continuar;床:cama;唱:cantar;歌:canção;舞:dança;旅:viagem;息:descanso;泳:nadar;踢:chutar;足:pé;篮:cesta;希:esperar;望:olhar, esperança;机:máquina;飞:voar`.split(';').forEach(x=>{const k=x.indexOf(':');CM[x.slice(0,k)]=x.slice(k+1)});
+const CM=window.CM={};`谢:agradecer;客:hóspede;气:ar, atitude;系:relação;见:ver, encontrar;们:plural de pessoas;什:o quê;么:sufixo de pergunta;儿:sufixo diminutivo (erhua);怎:como;学:estudar;习:praticar;工:trabalho;作:fazer, trabalho;喜:gostar;欢:alegre;校:escola;师:mestre;生:vida, nascer;朋:amigo;友:amigo;今:hoje, agora;天:dia, céu;明:claro, amanhã;昨:ontem;现:atual;饭:refeição, arroz;苹:maçã;果:fruta;话:fala;脑:cérebro;医:medicina;院:instituição, pátio;因:causa;所:lugar, o que;以:com, por meio de;但:mas;已:já;经:passar por;非:não (forte);觉:sentir;知:saber;道:caminho;告:informar;诉:contar;帮:ajudar;助:auxiliar;旁:lado;边:borda, lado;便:conveniente;宜:adequado;漂:bonito;亮:brilhante;兴:ânimo;病:doença;面:rosto, lado;公:público;共:em comum;汽:vapor;车:veículo;租:alugar;手:mão;晚:tarde, noite;午:meio-dia;时:tempo;候:momento;阿:prefixo afetivo;姨:tia materna;安:seguro, calmo;静:quieto;全:inteiro;班:turma;级:nível, série;法:método;半:metade;报:jornal, relatar;方:direção, lugar;笔:caneta;较:comparar;如:como;赛:competição;必:certamente;须:dever;成:tornar-se;化:transformar;表:mostrar, tabela;演:atuar;宾:hóspede;馆:edifício;激:estimular;凌:gelo;箱:caixa;同:igual;单:lista, simples;参:participar;衬:forro;衫:camisa;绩:resultado;城:cidade;迟:atrasado;初:início;除:excluir;春:primavera;词:palavra;典:referência;聪:esperto;打:bater, fazer;算:calcular;概:aproximação;熊:urso;衣:roupa;担:carregar;心:coração;蛋:ovo;糕:bolo;当:ser, quando;然:assim;处:lugar;分:dividir, ponto;图:figura, mapa;梯:escada;冬:inverno;动:mover;物:coisa;裤:calça;锻:forjar;炼:refinar, treinar;而:e, mas;且:além disso;耳:orelha;朵:contador de orelhas/flores;烧:queimar;展:expandir;房:casa;假:folga;夫:marido;妻:esposa;服:vestir, servir;务:serviço;附:junto;复:repetir;净:limpo;感:sentir;趣:interesse;冒:emitir;铁:ferro;根:raiz, base;据:evidência;故:antigo, motivo;事:assunto;于:em, sobre;注:atenção;国:país;害:prejudicar;号:número;码:código;合:combinar;适:adequar;板:tábua;绿:verde;后:depois, atrás;护:proteger;花:flor;画:desenhar, pintura;迎:receber;环:redor;境:fronteira, ambiente;黄:amarelo;色:cor;答:responder;议:discutir;者:quem faz;乎:partícula;期:período;坚:firme;持:manter;检:inspecionar;简:simples;健:saudável;康:saúde;结:atar, concluir;婚:casamento;目:olho, item;束:feixe, amarrar;解:desatar, explicar;决:decidir;姐:irmã mais velha;妹:irmã mais nova;理:razão, gerir;定:fixar;文:texto, escrita;空:vazio, ar;调:ajustar;筷:hashi;矿:mineral;泉:fonte;自:de, si mesmo;礼:cortesia;历:percorrer;史:história;凉:fresco;邻:vizinho;居:morar;留:ficar;楼:prédio, andar;口:boca, entrada;满:cheio;意:intenção;前:frente;名:nome;男:homem;轻:leve;努:esforçar;力:força;女:mulher;拍:bater, filmar;盘:prato;啤:cerveja;平:plano, calmo;瓶:garrafa;奇:raro;怪:estranho;其:seu, esse;实:real;铅:chumbo, grafite;清:claro;楚:nítido;秋:outono;球:bola;场:campo;裙:saia;情:sentimento;认:reconhecer;容:conter;易:fácil;沙:areia;勺:colher;身:corpo;活:viver;音:som;世:geração, mundo;界:limite;叔:tio;数:número;司:administrar;阳:sol;特:especial;提:levantar;体:corpo;育:educar;头:cabeça;突:súbito;语:idioma;网:rede;忘:esquecer;卫:proteger;间:espaço, entre;屋:cômodo;瓜:melão;惯:costume;澡:banho;夏:verão;香:perfume;蕉:banana;相:mutuamente;区:área;闻:ouvir;鲜:fresco;李:ameixa, bagagem;休:descansar;需:precisar;择:selecionar;求:pedir;样:aparência;般:tipo;直:reto;乐:música, alegria;银:prata;饮:beber;料:material;应:dever;影:sombra, imagem;响:ressoar;邮:correio;游:passear, nadar;戏:brincar, teatro;羽:pena;言:fala;雨:chuva;遇:encontrar;愿:desejar;运:mover, sorte;咱:nós;顾:cuidar;片:fatia, cartão;终:fim;重:pesado, importante;周:semana, ciclo;末:fim;主:principal;业:atividade;商:comércio;店:loja;火:fogo;京:capital;星:estrela;钟:sino, relógio;爸:pai;妈:mãe;杯:copo;视:ver;汉:chinês (han);桌:mesa;椅:cadeira;睡:dormir;识:conhecer;第:ordinal;正:certo, justamente;教:ensinar;左:esquerda;右:direita;早:cedo;哥:irmão mais velho;弟:irmão mais novo;丈:senhor;孩:criança;肉:carne;奶:leite;咖:som de "café";啡:som de "café";眼:olho;睛:olho;考:testar;思:pensar;颜:rosto, cor;条:tira;跑:correr;步:passo;准:exato, permitir;备:preparar;始:começar;介:intermediar;绍:continuar;床:cama;唱:cantar;歌:canção;舞:dança;旅:viagem;息:descanso;泳:nadar;踢:chutar;足:pé;篮:cesta;希:esperar;望:olhar, esperança;机:máquina;飞:voar`.split(';').forEach(x=>{const k=x.indexOf(':');CM[x.slice(0,k)]=x.slice(k+1)});
 W.forEach(w=>{if(!w.x&&w.h.length==1&&!CM[w.h])CM[w.h]=w.t});
 const V='aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ',RX=new RegExp('[eēéěè]r(?!['+V+'])|(?:[zcs]h|[bpmfdtnlgkhjqxrzcswy])?['+V+']+(?:ng(?!['+V+'])|n(?!['+V+']))?','gi');
 const seg=p=>{const o=[];for(const q of p.split(/['’]/)){const s=q.match(RX)||[];if(s.join('')!=q)return null;o.push(...s)}return o};
@@ -597,6 +604,255 @@ window.decP=function(h,p){const c=[...h];if(c.length<2||!c.every(x=>/[\u4e00-\u9
  return c.map((x,i)=>({c:x,p:s?s[i]:((W.find(w=>!w.x&&w.h==x)||{}).p||''),t:CM[x]||''}))};
 window.decH=function(w){const d=decP(w.h,w.p);if(!d)return '';
  return `<details class="dc" onclick="event.stopPropagation()"><summary>🔍 Decompor</summary><div class="dcg">${d.map(x=>`<div class="dcp" data-s="${esc(x.c)}" onclick="say(this.dataset.s)"><div class="dch">${esc(x.c)}</div><div class="py">${esc(x.p)}</div><div class="mut">${esc(x.t||'—')}</div></div>`).join('')}</div><div class="dcs">${d.map(x=>esc(x.c)).join(' + ')} → <b>${esc(w.t)}</b> <span>(toque num caractere para ouvir)</span></div></details>`};
+})();
+</script>
+<script>
+(function(){
+const patterns=[
+{g:'Sujeito + 在 + lugar + verbo',ex:'我在学校学习。',pt:'Eu estudo na escola.',goal:'在', words:['学习','学校','工作','家','公园']},
+{g:'Sujeito + 想 + verbo / objeto',ex:'我想喝茶。',pt:'Eu quero beber chá.',goal:'想',words:['喝','吃','买','去','学习']},
+{g:'Sujeito + 因为…所以…',ex:'因为今天很忙，所以我不去。',pt:'Como estou ocupado hoje, não vou.',goal:'因为',words:['忙','累','天气','考试','学习']},
+{g:'Sujeito + 比 + comparação + adjetivo',ex:'今天比昨天冷。',pt:'Hoje está mais frio que ontem.',goal:'比',words:['冷','热','高','大','快']},
+{g:'Sujeito + 正在 + verbo + objeto',ex:'我正在看书。',pt:'Estou lendo agora.',goal:'正在',words:['看','吃','学习','工作','做']},
+{g:'如果…就… (condição)',ex:'如果下雨，我就不去。',pt:'Se chover, não vou.',goal:'如果',words:['下雨','忙','有时间','生病','累']},
+{g:'…的时候 + frase',ex:'吃饭的时候，我看电视。',pt:'Quando como, assisto TV.',goal:'时候',words:['吃饭','学习','上班','睡觉','旅游']},
+{g:'Sujeito + 把 + objeto + verbo',ex:'我把书放在桌子上。',pt:'Coloquei o livro na mesa.',goal:'把',words:['书','衣服','手机','东西','桌子']},
+{g:'Sujeito + 得 + complemento',ex:'他跑得很快。',pt:'Ele corre muito rápido.',goal:'得',words:['跑','说','写','做','唱歌']},
+{g:'Sujeito + 虽然…但是…',ex:'虽然很累，但是我很高兴。',pt:'Embora esteja cansado, estou feliz.',goal:'虽然',words:['累','忙','贵','冷','难']},
+{g:'Sujeito + 已经 + verbo + 了',ex:'我已经吃饭了。',pt:'Já comi.',goal:'已经',words:['完成','吃','到','看','回']},
+{g:'Sujeito + 觉得 + frase/adj',ex:'我觉得这个电影很好看。',pt:'Acho esse filme muito bom.',goal:'觉得',words:['电影','天气','汉语','东西','老师']}
+];
+let ix=0,number=3,inputs=[];
+function render(){const el=document.getElementById('grammarwriting');if(!el)return;const a=patterns[ix];
+ el.innerHTML=`<div class="hero"><div class="hero-s">Modo de produção · gramática</div><div class="hero-t">${ix+1}/${patterns.length} · Construindo frases</div><div class="bar sm"><i style="width:${100*(ix+1)/patterns.length}%"></i></div></div><div class="card"><h2>Estrutura</h2><div style="font-size:22px;font-weight:bold">${a.g}</div><div style="margin-top:10px"><b>Exemplo:</b> ${a.ex}<br><span class="py">${pyl(a.ex)}</span><br><span class="mut">${a.pt}</span><button onclick="say('${a.ex}')">🔊 Ouvir exemplo</button></div></div><div class="card"><h3>Palavras obrigatórias nesta rodada</h3><div class="row" style="justify-content:flex-start;flex-wrap:wrap">${a.words.slice(0,number).map(w=>`<span class="tg">${w}</span>`).join('')}</div><div class="mut">Escreva ${number} frase(s) diferentes usando a estrutura e incluindo pelo menos uma palavra de cada lista por frase. (Você pode combinar palavras.)</div></div><div class="card"><h3>Escreva suas frases em hanzi</h3><textarea id="gwrite" rows="${number+2}" placeholder="Uma frase por linha…"></textarea><div class="row"><button onclick="gcheck()" class="pri">Conferir minhas frases</button><button onclick="gshow()">Ver exemplos-modelo</button></div><div id="gfeedback"></div></div><div class="row"><button onclick="gprev()">← Anterior</button><button onclick="gnext()">Próxima estrutura →</button></div>`;
+}
+window.gcheck=function(){let val=document.getElementById('gwrite').value.trim(),lines=val.split(/[\n。！？!?]+/).map(x=>x.trim()).filter(Boolean),a=patterns[ix],fb=document.getElementById('gfeedback');if(lines.length<number){fb.innerHTML='<div class="fbx warn">Escreva pelo menos '+number+' frases, uma por linha.</div>';return}let results=lines.slice(0,number).map((line,i)=>{let target=line.includes(a.goal),words=a.words.filter(w=>line.includes(w));return `<div class="item"><b>Frase ${i+1}:</b> ${line}<div class="mut">${target?'✓ contém a estrutura/elemento '+a.goal:'⚠ procure incluir '+a.goal} · palavras da lista: ${words.length?words.join(', '):'nenhuma detectada'}</div></div>`});fb.innerHTML=results.join('')+'<div class="fbx warn">Esta conferência é automática e verifica elementos presentes; não é uma correção completa de gramática ou naturalidade.</div>';};
+window.gshow=function(){let a=patterns[ix];document.getElementById('gfeedback').innerHTML=`<div class="card"><b>Modelo:</b> ${a.ex}<div class="py">${pyl(a.ex)}</div><div>${a.pt}</div><button onclick="say('${a.ex}')">🔊</button></div><div class="mut">Tente criar suas próprias frases, não apenas copiar o exemplo.</div>`};
+window.gnext=()=>{ix=(ix+1)%patterns.length;render()};window.gprev=()=>{ix=(ix+patterns.length-1)%patterns.length;render()};
+const tabs=window.tabs||[];if(!tabs[16])tabs[16]='Escrever frases · gramática';
+const dw=document.getElementById('dw');if(dw){dw.innerHTML+=`<h3>✍️ Produção</h3><button data-i="16"><span class="ic">✍️</span>${tabs[16]}</button>`}
+const sec=document.createElement('section');sec.id='s16';sec.className='sec';sec.innerHTML='<div id="grammarwriting"></div>';document.querySelector('main')?.appendChild(sec);if(!document.querySelector('main'))document.body.appendChild(sec);
+const oldShow=window.show;window.show=function(){oldShow();if(nav===16)render()};
+})();
+</script>
+<script>
+(function(){
+const SUB=['Frases','HSKK','Padrões HSK 3','Armadilhas','Plano'];
+let sub=0,q='',mode='w',openAll=false;
+const HZ=/[\u4e00-\u9fff]/,WM={};
+const HK=`你 叫 什么 名字|我 叫 小明，我 是 学生|Como você se chama?|Meu nome é Xiaoming, sou estudante.
+你 住 在 哪儿|我 住 在 巴西 的 圣保罗|Onde você mora?|Moro em São Paulo, no Brasil.
+你 今年 多 大|我 今年 二十 岁|Quantos anos você tem?|Tenho vinte anos.
+你 每天 几 点 起床|我 每天 早上 七 点 起床|A que horas você acorda todo dia?|Acordo às sete da manhã todos os dias.
+你 喜欢 做 什么|我 喜欢 看 电影 和 听 音乐|O que você gosta de fazer?|Gosto de ver filmes e ouvir música.
+你 会 说 汉语 吗|我 会 说 一点儿 汉语|Você sabe falar chinês?|Sei falar um pouco de chinês.
+你 家 有 几 口 人|我 家 有 四 口 人|Quantas pessoas há na sua família?|Minha família tem quatro pessoas.
+周末 你 常常 做 什么|周末 我 常常 和 朋友 一起 玩|O que você costuma fazer no fim de semana?|No fim de semana costumo sair com amigos.
+你 想 喝 什么|我 想 喝 一 杯 茶|O que você quer beber?|Quero uma xícara de chá.
+今天 天气 怎么样|今天 天气 很 好，不 冷 也 不 热|Como está o tempo hoje?|Hoje o tempo está bom, nem frio nem quente.
+你 怎么 去 学校|我 坐 公共汽车 去 学校|Como você vai à escola?|Vou à escola de ônibus.
+你 为什么 学 汉语|因为 我 对 中国 文化 感兴趣|Por que você estuda chinês?|Porque tenho interesse na cultura chinesa.
+你 昨天 做 什么 了|昨天 我 在 家 看 书 了|O que você fez ontem?|Ontem li em casa.
+你 觉得 汉语 难 吗|我 觉得 有点儿 难，但是 很 有意思|Você acha chinês difícil?|Acho um pouco difícil, mas é muito interessante.
+你 的 爱好 是 什么|我 的 爱好 是 踢 足球|Qual é o seu hobby?|Meu hobby é jogar futebol.
+你 什么 时候 有 时间|明天 下午 我 有 时间|Quando você tem tempo?|Amanhã à tarde tenho tempo.
+你 有 手机 吗|我 有，是 新 买 的|Você tem celular?|Tenho, é novo.
+后天 星期 几|后天 星期五|Depois de amanhã é que dia da semana?|Depois de amanhã é sexta-feira.
+今天 热 不 热|今天 不 太 热，很 舒服|Hoje está quente?|Hoje não está muito quente, está agradável.
+我 不 爱 吃 肉，你 呢|我 也 不 爱 吃 肉，我 爱 吃 水果|Não gosto de carne, e você?|Eu também não, gosto de frutas.
+你 是 怎么 学 汉语 的|我 是 在 学校 学 的，也 看 视频|Como você aprendeu chinês?|Aprendi na escola e também vendo vídeos.
+茶 和 果汁，你 想 喝 哪个|我 想 喝 茶|Chá ou suco, qual quer beber?|Quero chá.
+你 最 想 去 哪儿 工作|我 最 想 去 北京 工作|Onde mais quer trabalhar?|Quero muito trabalhar em Pequim.
+你 会 说 几 种 语言|我 会 说 两 种 语言，葡萄牙语 和 西班牙语|Quantos idiomas você fala?|Falo dois idiomas, português e espanhol.
+你们 班 谁 最 高|我们 班 的 小王 最 高|Quem é o mais alto da turma?|Xiao Wang é o mais alto da turma.
+你 的 生日 是 几 月 几 号|我 的 生日 是 五 月 十 号|Qual é a data do seu aniversário?|Meu aniversário é 10 de maio.
+你 在 哪儿 吃 午饭|我 在 学校 吃 午饭|Onde você almoça?|Almoço na escola.
+你 的 家 离 学校 远 不 远|不 太 远，坐 车 二十 分钟|Sua casa fica longe da escola?|Não muito, vinte minutos de ônibus.
+你 昨天 几 点 睡觉 的|我 昨天 十一 点 睡觉 的|A que horas você dormiu ontem?|Dormi às onze.
+你 喜欢 冬天 还是 夏天|我 喜欢 夏天，因为 可以 游泳|Gosta de inverno ou verão?|Gosto do verão, porque posso nadar.
+你 学 汉语 多 长 时间 了|我 学 汉语 一 年 了|Há quanto tempo estuda chinês?|Estudo chinês há um ano.
+你 会 不 会 唱歌|我 会 唱 一点儿，唱 得 不 太 好|Você sabe cantar?|Canto um pouco, não muito bem.
+你 想 买 什么|我 想 买 一 本 书|O que você quer comprar?|Quero comprar um livro.
+你 爱 不 爱 看 电视|我 爱 看 电视，特别 是 电影|Você gosta de ver TV?|Gosto, principalmente de filmes.
+你 家 有 没有 狗|我 家 有 一 只 狗，很 可爱|Tem cachorro em casa?|Tenho um cachorro, bem fofo.
+明天 天气 怎么样|明天 可能 会 下雨|Como estará o tempo amanhã?|Amanhã talvez chova.
+你 今天 早上 吃 什么 了|我 吃 了 面包 和 鸡蛋|O que comeu hoje cedo?|Comi pão e ovos.
+我 去 过 中国，你 呢|我 还 没 去 过，我 很 想 去|Já fui à China, e você?|Ainda não fui, quero muito ir.
+你 的 手机 是 什么 颜色 的|我 的 手机 是 黑色 的|Que cor é seu celular?|Meu celular é preto.
+你 每天 学习 几 个 小时|我 每天 学习 两 个 小时|Quantas horas estuda por dia?|Estudo duas horas por dia.
+你 觉得 今天 的 考试 难 吗|不 太 难，我 觉得 还 可以|A prova de hoje foi difícil?|Não muito, achei razoável.
+你 想 和 谁 一起 去 旅游|我 想 和 朋友 一起 去|Com quem quer viajar?|Quero ir com amigos.
+你 的 房间 大 不 大|不 太 大，但是 很 干净|Seu quarto é grande?|Não muito, mas é limpo.
+周末 你 在 家 还是 出去 玩|我 常常 在 家 休息|No fim de semana fica em casa ou sai?|Costumo descansar em casa.
+你 什么 时候 开始 学 汉语 的|我 去年 开始 学 的|Quando começou a estudar chinês?|Comecei no ano passado.
+你 最 喜欢 什么 运动|我 最 喜欢 游泳|Qual esporte prefere?|Gosto mais de natação.
+你 能 说 一下 你 的 一天 吗|我 早上 学习，下午 工作，晚上 休息|Pode contar seu dia?|Estudo de manhã, trabalho à tarde, descanso à noite.`.split('\n').map(x=>x.split('|'));
+const R1=`很 高兴 见到 你|Prazer em conhecer você.
+公共汽车 来 了|O ônibus chegou.
+她 正在 做饭|Ela está cozinhando.
+上海 今天 下 大雨|Hoje chove forte em Xangai.
+我 哥哥 在 银行 工作|Meu irmão trabalha no banco.
+这 件 衣服 八十 块|Esta roupa custa oitenta yuans.
+她 爱 听 音乐|Ela adora ouvir música.
+你 家 真 干净|Sua casa é muito limpa!
+让 我 看 一 看|Deixe-me dar uma olhada.
+新年 快乐|Feliz ano novo!
+我 买 了 一些 水果|Comprei algumas frutas.
+学校 离 我 家 不 远|A escola não fica longe da minha casa.
+晚上 我们 去 跑步 吧|Vamos correr à noite.
+电影 九 点 半 开始|O filme começa às nove e meia.
+这个 太 好吃 了|Isto está delicioso!
+她 没 去 上班|Ela não foi trabalhar.
+商店 在 医院 旁边|A loja fica ao lado do hospital.
+他 喜欢 踢 足球|Ele gosta de jogar futebol.
+我们 都 认识 那 位 老师|Todos conhecemos aquele professor.
+前天 天气 很 热|Anteontem fez muito calor.
+现在 是 上午 十 点 二十 分|Agora são dez e vinte da manhã.
+我 的 电脑 坏 了|Meu computador estragou.
+欢迎 你们 来 中国 玩儿|Bem-vindos à China para passear.
+请 给 我 一 瓶 水|Por favor, me dê uma garrafa de água.
+希望 你 明天 来|Espero que você venha amanhã.
+这儿 的 苹果 很 贵|As maçãs daqui são caras.
+谢谢 你 的 帮助|Obrigado pela ajuda!
+他 觉得 很 累|Ele se sente muito cansado.
+你 早点儿 睡 吧|Durma mais cedo.
+她 比 我 小 三 岁|Ela é três anos mais nova que eu.
+他 跳舞 跳 得 很 好|Ele dança muito bem.
+我 是 坐 飞机 来 的|Vim de avião.
+多 喝水 对 身体 好|Beber bastante água faz bem à saúde.
+雨 下 得 很 大|Está chovendo muito forte.
+我 朋友 在 打 篮球|Meu amigo está jogando basquete.
+我 已经 做完 作业 了|Já terminei a lição de casa.
+我 妹妹 在 学校 学习|Minha irmã estuda na escola.
+天气 太 热 了|Está calor demais.
+他 每天 骑 自行车 上班|Ele vai trabalhar de bicicleta todo dia.
+这 个 房间 很 大|Este quarto é muito grande.
+我 想 喝 一 杯 热 茶|Quero tomar um chá quente.
+明天 是 星期六|Amanhã é sábado.
+你 能 帮 我 吗|Você pode me ajudar?
+他们 在 公园 里 玩儿|Eles brincam no parque.
+我 的 手机 在 桌子 上|Meu celular está sobre a mesa.
+她 唱歌 唱 得 很 好听|Ela canta muito bem.
+我 喜欢 红色 的 裙子|Gosto de saia vermelha.
+那 家 饭馆 的 菜 很 好吃|A comida daquele restaurante é gostosa.
+请 问，洗手间 在 哪儿|Com licença, onde fica o banheiro?
+我 去 过 上海 两 次|Já fui a Xangai duas vezes.
+他 今年 比 去年 忙|Este ano ele está mais ocupado que no ano passado.
+下 个 月 我 要 去 旅游|No mês que vem vou viajar.
+我 先 吃饭，然后 看 书|Primeiro como, depois leio.
+他 说 汉语 说 得 很 清楚|Ele fala chinês com clareza.
+你 的 包 在 椅子 下面|Sua bolsa está debaixo da cadeira.
+我 一 回家 就 洗澡|Assim que chego em casa, tomo banho.
+她 的 孩子 三 岁 了|O filho dela tem três anos.
+这 本 书 很 有意思|Este livro é muito interessante.
+别 忘 了 带 雨伞|Não esqueça de levar o guarda-chuva.
+我们 坐 地铁 去 机场 吧|Vamos de metrô ao aeroporto.`.split('\n').map(x=>x.split('|'));
+const OP=[['你 好，你 叫 什么 名字','我 叫 小明','Como você se chama?','Meu nome é Xiaoming.'],['你 是 哪 国 人','我 是 巴西 人','De que país você é?','Sou brasileiro(a).'],['你 的 序号 是 多少','我 的 序号 是 十二','Qual é o seu número de série?','Meu número é doze.']];
+const P3=`请 说说 你 的 爱好|Fale de um hobby seu.|我 的 爱好 是 看 电影。我 每 个 周末 都 去 电影院，有时候 和 朋友 一起 去。看 电影 让 我 很 高兴，也 能 学 汉语。|Meu hobby é ver filmes. Todo fim de semana vou ao cinema, às vezes com amigos. Isso me deixa feliz e ajuda a aprender chinês.
+请 介绍 一下 你 的 家|Apresente sua família.|我 家 有 四 口 人，爸爸、妈妈、哥哥 和 我。爸爸 在 公司 工作，妈妈 是 老师。周末 我们 常常 一起 吃饭。|Minha família tem quatro pessoas. Papai trabalha numa empresa, mamãe é professora. No fim de semana comemos juntos.
+你 喜欢 坐 地铁 吗？为什么|Você gosta de metrô? Por quê?|我 喜欢 坐 地铁，因为 又 快 又 方便。可是 人 有点儿 多，所以 我 早 一点儿 出门。|Gosto, porque é rápido e prático. Mas tem muita gente, então saio mais cedo.
+请 说说 你 昨天 做 了 什么|Conte o que fez ontem.|昨天 早上 我 去 学校 上课，下午 在 图书馆 学习，晚上 和 朋友 吃饭。我 觉得 昨天 很 忙，但是 很 高兴。|Ontem de manhã fui à aula, à tarde estudei na biblioteca, à noite jantei com amigos. Foi corrido, mas feliz.
+请 介绍 一个 你 的 好 朋友|Apresente um bom amigo.|我 的 好 朋友 叫 小李，他 二十 岁，是 我 的 同学。他 很 聪明，也 爱 帮助 别人。我们 常常 一起 学习。|Meu bom amigo se chama Xiao Li, tem vinte anos, é meu colega. É inteligente e gosta de ajudar. Estudamos juntos.
+你 喜欢 你 的 城市 吗？为什么|Gosta da sua cidade? Por quê?|我 喜欢 我 的 城市，因为 这儿 的 人 很 好，东西 也 不 贵。但是 夏天 有点儿 热。|Gosto, porque as pessoas são boas e as coisas não são caras. Mas o verão é um pouco quente.
+请 说说 你 周末 常常 做 什么|Fale do que costuma fazer no fim de semana.|周末 我 常常 和 朋友 一起 去 公园 玩儿。有时候 我 在 家 看 书、做饭。我 觉得 周末 过 得 很 快，我 很 喜欢 周末。|No fim de semana costumo ir ao parque com amigos. Às vezes leio e cozinho em casa. O fim de semana passa rápido, e eu gosto muito dele.
+请 介绍 一下 你 的 学校|Apresente sua escola.|我 的 学校 很 大，也 很 漂亮。学校 里 有 图书馆 和 运动场。老师 们 都 很 好，同学 们 也 很 热情。我 喜欢 我 的 学校。|Minha escola é grande e bonita, tem biblioteca e quadra. Os professores são bons e os colegas, simpáticos. Eu gosto da minha escola.`.split('\n').map(x=>x.split('|'));
+const PT=`比 (comparação): A 比 B + adj|他 比 我 高|Ele é mais alto que eu.
+没有 (comparação)|我 没有 他 高|Não sou tão alto quanto ele.
+把: A 把 + objeto + verbo + resultado|请 把 门 关上|Por favor, feche a porta.
+被 (passiva)|我 的 手机 被 弟弟 拿走 了|Meu celular foi levado pelo meu irmão.
+一边…一边…|他 一边 吃饭 一边 看 电视|Ele come enquanto vê TV.
+越来越|天气 越来越 热 了|O tempo está cada vez mais quente.
+除了…以外|除了 苹果 以外，我 还 喜欢 香蕉|Além de maçã, também gosto de banana.
+先…然后…|我 先 洗澡，然后 睡觉|Primeiro tomo banho, depois durmo.
+从…到…|从 我家 到 学校 很 近|De casa até a escola é perto.
+离 (distância)|学校 离 我家 很 近|A escola fica perto de casa.
+对…感兴趣|我 对 音乐 感兴趣|Tenho interesse em música.
+一…就…|他 一 回家 就 看 电视|Assim que chega em casa, ele vê TV.
+快…了 / 要…了 (iminência)|火车 快 到 了|O trem está quase chegando.
+刚|我 刚 吃完 饭|Acabei de comer.
+是…的 (enfatiza tempo/modo)|我 是 昨天 来 的|Foi ontem que eu vim.
+过 (experiência)|我 去 过 北京|Já fui a Pequim.
+着 (estado)|门 开 着|A porta está aberta.
+得 (complemento de grau)|她 说 得 很 好|Ela fala muito bem.
+还是 (pergunta de escolha)|你 喝 茶 还是 咖啡|Você bebe chá ou café?`.split('\n').map(x=>x.split('|'));
+const TR=`会 / 能 / 可以: 会 = saber (aprendido); 能 = ser capaz, condições permitem; 可以 = permissão|我 会 游泳，但是 今天 不 能 游|Sei nadar, mas hoje não posso.
+又 / 再: 又 = repetição que já aconteceu; 再 = repetição no futuro|他 又 来 了，请 你 再 说 一 遍|Ele veio de novo; diga mais uma vez, por favor.
+还是 / 或者: 还是 em perguntas; 或者 em afirmações|你 要 茶 还是 咖啡|Você quer chá ou café?
+的 / 地 / 得: 的 + substantivo; 地 antes do verbo; 得 depois do verbo|她 慢慢 地 走，走 得 很 慢|Ela anda devagar, anda bem devagar.
+二 / 两: 两 antes de classificador; 二 em números e ordem|我 有 两 个 朋友，二 十 岁|Tenho dois amigos, vinte anos.
+不 / 没: 不 = negação geral, futuro, hábito; 没 = passado e "não ter"|我 不 去，他 没 去，我 没有 钱|Não vou, ele não foi, não tenho dinheiro.
+一点儿 / 有点儿: 有点儿 antes de adjetivo (nuance negativa); 一点儿 depois|这 个 有点儿 贵，便宜 一点儿 吧|Este é meio caro, faça mais barato.`.split('\n').map(x=>x.split('|'));
+const CL='个:geral (pessoas, coisas);本:livros, cadernos;杯:copos, xícaras;件:roupas, assuntos;张:planos (papel, mesa, cama);条:longos (rua, calça, rio);只:animais pequenos;双:pares (sapatos);瓶:garrafas;把:cadeira, guarda-chuva, faca;辆:veículos;位:pessoas (polido);口:membros da família;家:lojas, empresas;次:vezes (ações);些:alguns';
+const ITEMS=['Cartões: zerar os vencidos e as erradas recentes (20 min)','Escuta: 1 bloco completo, lendo as opções antes do áudio','Leitura: 10 questões cronometradas (1 min cada)','Escrita: ordenar 10 frases e escrever 5 palavras a partir do pinyin','HSKK: repetir 15 frases em voz alta e responder 10 perguntas, gravando','Frases: sequenciar 5 frases da biblioteca sem olhar o modelo'];
+const PK='hsk3plan',ld=()=>{try{return JSON.parse(localStorage.getItem(PK))||{}}catch(e){return{}}},sv=o=>{try{localStorage.setItem(PK,JSON.stringify(o))}catch(e){}};
+const td=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const wm=()=>{for(const k in WM)delete WM[k];W.forEach(w=>{if(!w.x&&!(w.h in WM))WM[w.h]=w.t})};
+const seg=s=>{const c=[...s],o=[];let i=0;while(i<c.length){let f=1;if(HZ.test(c[i]))for(let k=Math.min(4,c.length-i);k>1;k--)if(WM[c.slice(i,i+k).join('')]){f=k;break}o.push(c.slice(i,i+f).join(''));i+=f}return o};
+const tr=t=>{if(WM[t])return WM[t];const m=window.CM||{},c=[...t];return c.map(x=>m[x]||WM[x]||'?').join(c.length>1?' + ':'')||'—'};
+const cell=(h,p,t)=>`<div class="dcp" data-s="${esc(h)}" onclick="say(this.dataset.s)"><div class="dch">${esc(h)}</div><div class="py">${esc(p)}</div><div class="mut">${esc(t)}</div></div>`;
+const LAT=/^[a-zA-Züāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ\s'’]+$/,CP={};
+const cpy=c=>{if(CP[c]!==undefined)return CP[c];let r='';const w=W.find(x=>!x.x&&x.h==c&&LAT.test(x.p||''));if(w)r=w.p;else for(const x of W){if(x.x||x.h.length<2||!x.h.includes(c))continue;const d=window.decP&&decP(x.h,x.p);const y=d&&d.find(z=>z.c==c);if(y&&y.p){r=y.p;break}}return CP[c]=r};
+const py=t=>{const p=pyl(t);if(LAT.test(p))return p;return [...t].map(c=>{const x=pyl(c);return LAT.test(x)?x:cpy(c)}).join(' ')};
+const sq=s=>{const ws=/\s/.test(s.trim())?s.trim().split(/\s+/):seg(s),cl=t=>t.replace(/[^\u4e00-\u9fff]/g,'');let o=[];
+ ws.map(cl).filter(Boolean).forEach(t=>{if(mode=='h'&&[...t].length>1){const d=window.decP&&decP(t,py(t));if(d)return d.forEach(x=>o.push(cell(x.c,x.p||cpy(x.c),x.t||tr(x.c))));[...t].forEach(c=>o.push(cell(c,py(c),tr(c))))}else o.push(cell(t,py(t),tr(t)))});
+ return `<div class="dcg phs">${o.join('')}</div>`};
+const item=(zh,pt,x='',h='')=>{const s=zh.replace(/\s/g,'');return `<div class="item">${h}<div style="font-size:22px">${esc(s)} <button data-s="${esc(s)}" onclick="say(this.dataset.s)">🔊</button></div><div class="py">${esc(pyl(s))}</div><div>${esc(pt)}</div>${openAll?`<details open><summary>🔍 Quadrados</summary>${sq(zh)}</details>`:`<details data-z="${esc(zh)}" ontoggle="phlT(this)"><summary>🔍 Decompor em quadrados</summary></details>`}${x}</div>`};
+window.phlT=d=>{if(d.open&&!d.dataset.k){d.dataset.k=1;d.insertAdjacentHTML('beforeend',sq(d.dataset.z))}};
+function list(){const z=q.toLowerCase(),n=F.length-CU.f.length;const r=F.map((f,i)=>[f,i]).filter(([f])=>!z||(f[0]+f[1]+pyl(f[0])).toLowerCase().includes(z));
+ $('phrases').innerHTML=`<div class="mut">${r.length} frase(s)</div>`+(r.map(([f,i])=>item(f[0],f[1],`<button class="pri" onclick="phraseOrder(${i})">🔀 Sequenciar</button>${i>=n?`<button onclick="delF(${i-n})">Excluir</button>`:''}`)).join('')||'<div class="mut">Nenhuma frase.</div>')}
+window.phraseLib=v=>{q=v||'';if($('phrases'))list()};window.phlQ=v=>{q=v;list()};
+window.phlM=m=>{mode=m;phl()};window.phlA=()=>{openAll=!openAll;phl()};window.phlS=i=>{sub=i;phl()};
+window.addF=function(){const r=$('af1').value.replace(/\s+/g,' ').trim(),t=$('af2').value.trim(),g=+$('af5').value,a=$('af3').value.replace(/\s+/g,' ').trim(),pa=$('af4').value.trim();if(!r||!t){$('phm').textContent='Preencha a frase em chinês e a tradução.';return}
+ F.push([r,t]);CU.f.push([r,t]);saveCU();if(g){const o=hl();o.p1=o.p1||[];o.p2=o.p2||[];g==1?o.p1.push([r,t]):o.p2.push([r,a,t,pa]);hs(o)}
+ q='';phl();$('phm').textContent=g?'Adicionada à biblioteca e ao treino de HSKK.':'Frase adicionada.'};
+window.delF=function(k){F.splice(F.length-CU.f.length+k,1);CU.f.splice(k,1);saveCU();phl()};
+window.phraseOrder=function(idx){const f=F[idx];if(!f)return;const s=f[0].trim(),toks=s.includes(' ')?s.split(/\s+/):[...s];window._po={f,toks,chosen:[]};const sh=toks.slice().sort(()=>Math.random()-.5);
+ $('poslot').innerHTML=`<div class="card" id="po"><h3>Monte a frase</h3><div class="mut">${esc(f[1])}</div><div id="poout" style="font-size:22px;min-height:35px"></div><div class="row">${sh.map((w,i)=>`<button onclick="poPick(${i})" id="pow${i}">${esc(w)}</button>`).join('')}</div><div class="row"><button class="pri" onclick="poCheck()">Conferir</button><button onclick="phraseOrder(${idx})">Recomeçar</button></div><div id="pofb"></div></div>`;$('poslot').scrollIntoView({behavior:'smooth'})};
+const dk={},RS={1:{n:0,ok:0,c:null},2:{n:0,ok:0,c:null}};
+function draw(n,a){let d=dk[n];if(!d||!d.q.length||d.len!=a.length){const q=a.map((_,i)=>i).sort(()=>Math.random()-.5);if(d&&q.length>1&&q[0]==d.l)q.push(q.shift());d=dk[n]={q,len:a.length,l:-1}}const i=d.q.shift();d.l=i;return i}
+const redo=(n,i)=>{const d=dk[n];if(d)d.q.splice(Math.min(3,d.q.length),0,i)};
+const fin=(k,z)=>`<div class="card"><b>Rodada concluída: ${RS[k].ok}/${z} ✓</b><div class="mut">As que você errou voltaram durante a rodada.</div><div class="row"><button class="pri" onclick="phlR(${k})">Nova rodada</button></div></div>`;
+window.phlR=k=>{RS[k]={n:0,ok:0,c:null};k==1?phlShadow():phlDrill()};
+window.phlG=(k,g)=>{const r=RS[k];r.n++;if(g)r.ok++;else redo(k==1?'p1':'p2',r.c);k==1?phlShadow():phlDrill()};
+window.phlShadow=function(){const r=RS[1],el=$('shslot');if(r.n>=15){el.innerHTML=fin(1,15);return}const a=R1all(),i=draw('p1',a),f=a[i],s=f[0].replace(/\s/g,'');r.c=i;window._sh=s;say(s);
+ el.innerHTML=`<div class="card"><div class="mut">Frase ${r.n+1}/15 · ouça e repita em voz alta (restam ${dk.p1.q.length} nesta volta).</div><div class="row"><button onclick="say(_sh)">🔊 De novo</button><button onclick="$('shtx').hidden=false">👁 Texto</button></div><div id="shtx" hidden><div style="font-size:22px">${esc(s)}</div><div class="py">${esc(pyl(s))}</div><div>${esc(f[1])}</div></div><div class="row"><button onclick="phlG(1,1)">✓ Repeti bem</button><button onclick="phlG(1,0)">✗ Errei, voltar depois</button></div></div>`};
+window.phlDrill=function(){const r=RS[2],el=$('drslot');if(r.n>=10){el.innerHTML=fin(2,10);return}const a=HKall(),i=draw('p2',a),h=a[i],s=h[0].replace(/\s/g,'');r.c=i;window._dq=s;say(s);
+ el.innerHTML=`<div class="card"><div class="mut">Pergunta ${r.n+1}/10 · só o áudio: responda em voz alta, com frase completa (restam ${dk.p2.q.length} nesta volta).</div><div class="row"><button onclick="say(_dq)">🔊 Repetir</button><button onclick="$('drtx').hidden=false">👁 Ver pergunta e modelo</button></div><div id="drtx" hidden>${item(h[0],h[2])}${h[1]?item(h[1],h[3]):''}</div><div class="row"><button onclick="phlG(2,1)">✓ Respondi bem</button><button onclick="phlG(2,0)">✗ Travei, voltar depois</button></div></div>`};
+window.phlTm=function(){const p=P3[draw('p3',P3)];$('t3slot').innerHTML=`<div class="card"><div class="mut">Tema sorteado: anote tópicos por 1 min e fale por 1,5 min.</div>${item(p[0],p[1])}<div class="row"><button onclick="$('t3m').hidden=false">👁 Ver resposta modelo</button><button class="pri" onclick="phlTm()">🎲 Outro tema</button></div><div id="t3m" hidden>${item(p[2],p[3])}</div></div>`};
+window.phlD=v=>{const o=ld();o.d=v;sv(o);phl()};window.phlTick=(i,c)=>{const o=ld();o.x=o.x||{};o.x[td()+':'+i]=c?1:0;sv(o)};
+let hp=0,only=0,ordk=0;
+const HKS='hsk3hk',hl=()=>{try{return JSON.parse(localStorage.getItem(HKS))||{}}catch(e){return{}}},hs=o=>{try{localStorage.setItem(HKS,JSON.stringify(o))}catch(e){}};
+const R1all=()=>{const c=hl().p1||[];return only&&c.length?c:R1.concat(c)},HKall=()=>{const c=hl().p2||[];return only&&c.length?c:HK.concat(c)};
+const ids=a=>a.map((_,i)=>i).sort((x,y)=>ordk?Math.sin(x*ordk*9999+1)-Math.sin(y*ordk*9999+1):x-y);
+const form=def=>`<details><summary>+ Adicionar frase</summary><input class="in" id="af1" placeholder="Frase ou pergunta em chinês (com ou sem espaços)"><input class="in" id="af2" placeholder="Tradução em português"><select class="in" id="af5">${['Só na biblioteca','Biblioteca + HSKK Parte 1 (repetir)','Biblioteca + HSKK Parte 2 (perguntas)'].map((t,i)=>`<option value="${i}" ${i==def?'selected':''}>${t}</option>`).join('')}</select><input class="in" id="af3" placeholder="Parte 2: resposta modelo em chinês (opcional)"><input class="in" id="af4" placeholder="Parte 2: tradução da resposta (opcional)"><button class="pri" onclick="addF()">Adicionar</button><div class="mut" id="phm"></div></details>`;
+window.phlP=i=>{hp=i;phl()};window.phlO=()=>{only=!only;dk.p1=dk.p2=null;RS[1].n=RS[2].n=0;phl()};window.phlX=()=>{ordk=Math.random()+.1;phl()};
+window.phlDH=(k,j)=>{const o=hl();(k==1?o.p1:o.p2).splice(j,1);hs(o);dk.p1=dk.p2=null;phl()};
+const card=(t,p)=>`<div class="card" style="text-align:left"><b>${t}</b><p class="mut">${p}</p></div>`;
+function hskk(){const P=['Abertura','Parte 1 · Repetir','Parte 2 · Responder','Parte 3 · Falar'];let h=`<div class="row" style="justify-content:flex-start">${P.map((n,i)=>`<button class="${hp==i?'on':''}" onclick="phlP(${i})">${n}</button>`).join('')}</div>`;
+ const c1=hl().p1||[],c2=hl().p2||[],a1=R1all(),a2=HKall(),b1=only&&c1.length?0:R1.length,b2=only&&c2.length?0:HK.length;
+ const tools=`<div class="row" style="justify-content:flex-start"><button class="${only?'on':''}" onclick="phlO()">Só as que eu adicionei</button><button onclick="phlX()">🔀 Embaralhar lista</button></div>`;
+ const dl=(k,i)=>`<button onclick="phlDH(${k},${i})">Excluir do HSKK</button>`;
+ const qa=(a,x='')=>`<div class="card" style="text-align:left">${item(a[0],a[2],'','<span class="tg s2">pergunta</span>')}${a[1]?item(a[1],a[3],'','<span class="tg s3">resposta modelo</span>'):''}${x}</div>`;
+ if(hp==0)h+=card('Abertura fixa','Nos modelos oficiais, antes das 15 repetições o áudio faz sempre as mesmas três perguntas (~10 s cada). Deixe as respostas prontas e fale sem pensar.')+OP.map(o=>qa(o)).join('');
+ else if(hp==1)h+=card('Parte 1 · ouvir e repetir (15 frases)','Repita logo após o sinal, com os mesmos tons e o mesmo ritmo. Nos modelos que você enviou há 7 a 10 s por frase. A rodada sorteia 15 frases sem repetir; as que você errar voltam logo depois.')+`<div class="row"><button class="pri" onclick="phlR(1)">🎧 Nova rodada de 15</button></div><div id="shslot"></div>`+tools+form(1)+`<div class="mut">${a1.length} frase(s)${c1.length?` · ${c1.length} sua(s)`:''}</div>`+ids(a1).map(i=>item(a1[i][0],a1[i][1],i>=b1?dl(1,i-b1):'')).join('');
+ else if(hp==2)h+=card('Parte 2 · ouvir e responder (10 perguntas)','Cerca de 10 s por resposta: uma frase completa e, se der, um detalhe. Padrões que se repetem: 吗 (是/不 + frase); 会不会, 冷不冷, 远不远 (escolha um lado); "我…，你呢？" (我也… ou 我不… + detalhe); X 和 Y，哪个？ (我喜欢 X); 多长时间, 几点, 多少 (número + unidade); 是…的 (como/quando); 为什么 (因为…). A rodada sorteia 10 perguntas sem repetir; as que você travar voltam depois.')+`<div class="row"><button class="pri" onclick="phlR(2)">🎙 Nova rodada de 10</button></div><div id="drslot"></div>`+tools+form(2)+`<div class="mut">${a2.length} pergunta(s)${c2.length?` · ${c2.length} sua(s)`:''}</div>`+ids(a2).map(i=>qa(a2[i],i>=b2?dl(2,i-b2):'')).join('');
+ else h+=card('Parte 3 · responder 2 temas','Nos modelos: ~7 min para preparar (dá para anotar tópicos) e ~1,5 min por tema. Roteiro em 4 blocos: resposta direta, razão (因为) ou exemplo, contraste ou detalhe (但是 / 还), fecho curto. Use frases simples que você domina.')+`<div class="row"><button class="pri" onclick="phlTm()">🎲 Sortear tema</button></div><div id="t3slot"></div>`+P3.map(p=>`<div class="card" style="text-align:left">${item(p[0],p[1],'','<span class="tg s2">tema</span>')}${item(p[2],p[3],'','<span class="tg s3">resposta modelo</span>')}</div>`).join('');
+ $('phb').innerHTML=h}
+function body(){const b=$('phb');
+ if(sub==0){b.innerHTML=`<div id="poslot"></div><div class="row" style="justify-content:flex-start"><button class="${mode=='w'?'on':''}" onclick="phlM('w')">Quadrados por palavra</button><button class="${mode=='h'?'on':''}" onclick="phlM('h')">Por hanzi</button><button class="${openAll?'on':''}" onclick="phlA()">Abrir todos</button><button onclick="phlShadow()">🎧 Repetir (HSKK)</button></div><div id="shslot"></div><input class="in" placeholder="Buscar frase, hanzi, pinyin ou tradução" value="${esc(q)}" oninput="phlQ(this.value)">${form(0)}<div id="phrases"></div>`;list()}
+ else if(sub==1)hskk();
+ else if(sub==2)b.innerHTML=`<div class="mut">Estruturas muito cobradas em HSK 3. Toque nos quadrados para ouvir cada palavra.</div><div id="poslot"></div>`+PT.map(p=>item(p[1],p[2],`<button class="pri" onclick="phlWr('${p[1].replace(/\s/g,'')}')">🔀 Ordenar</button>`,`<b>${esc(p[0])}</b>`)).join('');
+ else if(sub==3)b.innerHTML=`<div class="mut">Pares que mais confundem na prova de leitura e escrita.</div>`+TR.map(p=>item(p[1],p[2],'',`<div class="mut" style="margin-bottom:4px"><b>${esc(p[0])}</b></div>`)).join('')+`<h2>Classificadores (量词)</h2><div class="mut">Ex.: 一 本 书 · 两 杯 水 · 三 个 人 · 一 件 衣服 · 两 张 票 · 一 辆 车</div><div class="dcg phs">${CL.split(';').map(x=>{const i=x.indexOf(':'),h=x.slice(0,i);return cell(h,py(h),x.slice(i+1))}).join('')}</div>`;
+ else{const o=ld(),t=td(),n=o.d?Math.round((new Date(o.d+'T00:00:00')-new Date(t+'T00:00:00'))/864e5):null,x=o.x||{};
+  const tip=n==null?'Informe a data da prova para ver a contagem.':n<0?'Data já passou: escolha a nova data.':n<=2?'Reta final: só erros recentes, HSKK em voz alta e 1 simulado leve. Durma bem.':n<=7?'Semana da prova: 1 simulado completo cronometrado por dia útil e revisão das erradas.':'Use o plano abaixo todos os dias e foque nas erradas recentes.';
+  b.innerHTML=`<div class="card" style="text-align:left"><b>Data da prova</b><input type="date" class="in" value="${esc(o.d||'')}" onchange="phlD(this.value)">${n!=null&&n>=0?`<div class="hero-t">Faltam ${n} dia(s)</div>`:''}<div class="mut">${tip}</div></div><h2>Checklist de hoje</h2>${ITEMS.map((s,i)=>`<label class="lw"><input type="checkbox" ${x[t+':'+i]?'checked':''} onchange="phlTick(${i},this.checked)"><div class="lw-m">${s}</div></label>`).join('')}<h2>Estratégia no dia</h2><div class="card" style="text-align:left"><p><b>Escuta (~35 min):</b> leia as opções antes do áudio e responda enquanto ouve; não volte numa questão perdida.</p><p><b>Leitura (30 min, 30 questões):</b> cerca de 1 min por questão; no banco de palavras A–F, risque as já usadas.</p><p><b>Escrita (10 questões, 15 min):</b> ordene pelo esqueleto sujeito + (tempo/lugar) + verbo + objeto; no pinyin → hanzi, confira o tom antes de escrever.</p><p><b>HSKK:</b> fale alto e em frase completa; repetir a pergunta ajuda a ganhar tempo.</p></div>`}}
+window.phlWr=function(s){const i=F.findIndex(f=>f[0].replace(/\s/g,'')==s);if(i>=0)return phraseOrder(i);const p=PT.find(x=>x[1].replace(/\s/g,'')==s);F.push([p[1],p[2]]);phraseOrder(F.length-1);F.pop()};
+function phl(){wm();$('phl').innerHTML=`<div class="row" style="justify-content:flex-start">${SUB.map((n,i)=>`<button class="${sub==i?'on':''}" onclick="phlS(${i})">${n}</button>`).join('')}</div><div id="phb"></div>`;body()}
+tabs[17]='Biblioteca de frases';if(!tabs[16])tabs[16]='Escrever frases · gramática';
+const sec=document.createElement('section');sec.id='s17';sec.className='sec';sec.innerHTML='<div id="phl"></div>';document.querySelector('main').appendChild(sec);
+const IC=['🃏','❓','🎧','🧩','✍️','🎤','📐','📋','📚','🔁','🖌️','📖','📝','🎓','🖼️','📊','✍️','💬'],NG=[['Principal',[13,15]],['Praticar',[9,14,4,0,1,2,3,10,11]],['Trilhas e provas',[12,5,6,7]],['Produção',[16]],['Biblioteca',[8,17]]];
+$('dw').innerHTML='<div class="dwh"><b>汉语 HSK 1–3</b><span class="mut" id="dws"></span></div>'+NG.map(g=>`<h3>${g[0]}</h3>`+g[1].map(i=>`<button data-i="${i}"><span class="ic">${IC[i]}</span>${tabs[i]}</button>`).join('')).join('');
+const _s=window.show;window.show=function(){_s();if(nav===17)phl()};window.show();
 })();
 </script>
 </body></html>
