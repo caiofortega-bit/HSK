@@ -3830,4 +3830,209 @@ try{window.show()}catch(e){fail(e,'show')}
  // Intercepta o botão V/F para substituir o modo anterior, que estava no escopo do patch v4.
  document.addEventListener('click',function(ev){const b=ev.target.closest('button[data-custom=\"tf\"]');if(!b)return;ev.preventDefault();ev.stopImmediatePropagation();window.customNav='tf';nav=-99;document.querySelectorAll('.sec').forEach(sec=>sec.classList.remove('on'));document.getElementById('custom-tf').classList.add('on');document.querySelectorAll('#dw button').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('ttl').textContent=b.textContent;try{dwt(0)}catch(e){}startTF()},true);
 })();
+</script> <script>
+/* PATCH v6: categoria "Treino HSKK" (repetir, responder com modelo, temas para escrever).
+   Colar no fim do arquivo, DEPOIS do patch v5. */
+(function(){
+const fail=e=>{console.error(e);const v=document.getElementById('vs');if(v)v.textContent='Erro no patch v6: '+(e&&e.message||e)};
+if(typeof W==='undefined'||typeof say==='undefined'||typeof pyl==='undefined'||typeof esc==='undefined'||typeof sh==='undefined'){
+ const b=document.createElement('div');b.style.cssText='position:fixed;left:0;right:0;top:0;z-index:999;background:#b3261e;color:#fff;padding:12px;font:14px system-ui';
+ b.textContent='Patch v6 não aplicado: cole-o no fim do arquivo, depois dos patches anteriores.';document.body.appendChild(b);return}
+try{
+/* ---------- dados do arquivo (8 simulados) ---------- */
+const RT=[
+`这张床是我的。 我今年十岁了。 他不和父母一起住。 欢迎你再来。 我喜欢吃苹果。 你做的菜很好吃。 明天我要去买车票。 我家在南京路18号。 我们骑自行车去香山。 他们下星期口语考试。 他今天不上学。 现在快九点。 我每个周末都去看电影。 他哥哥是我的同学。 一年有四个季节。`,
+`这个电视是我新买的。 我现在每天七点起床。 他很会跳舞。 他家有一只猫。 我是坐火车去北京的。 他住518号房间。 今天下午我要去机场。 后天是他的生日。 这个星期学校不上课。 他每天都要喝一杯茶。 他不会说汉语。 我认识他有一年了。 他刚从医院回来。 我弟弟在北京语言大学上学。 他们开车走。`,
+`我找到我要的书。 南方人喜欢吃米饭。 左边的是他的房间。 今天晚上吃饺子。 现在雨已经不下了。 他要来北京旅游。 今天的天气真热。 这个周末他要考试。 今天我去机场接哥哥。 他每天早上去送牛奶。 这件衣服有点贵。 我是2008年来这个公司的。 他不喜欢喝牛奶。 中午我要去书店。 你的房间很漂亮。`,
+`他的朋友在北京工作。 明年我就18岁了。 商店在饭馆的后面。 飞机是8点30分的。 他下个星期去中国。 桌子上有四本书。 你的房间是508。 这是我第一次坐船。 他们明天去打篮球。 我不爱吃苹果。 这儿的菜非常贵。 我们都喜欢看书。 他不喜欢游泳。 我希望能早点来。 请给我一杯水。`,
+`这是我第一次来中国。 电影12点开始。 我在去火车站的路上。 我的孩子爱唱歌。 我来北京已经五年了。 他穿了一件红衣服。 学校离这儿很远。 我买一张火车票。 他都有85公斤。 我已经准备好了。 我要学汉语。 我不会写汉字。 这本书是他的。 我的手表不走了。 他还在看电视。`,
+`再过五分钟就六点。 他的汉语比我好。 我跑得很快。 我能在这儿住一星期。 不要在床上吃东西。 今天真是太忙了。 请和我一起唱。 我早上八点上班。 这个地方我没来过。 今天可能要下雨。 我对他说了这件事。 中午一起吃饭吧。 这儿不能踢足球。 他们这次又得了第一。 他们打算开车去。`,
+`今天天气非常冷。 欢迎你下次再来。 这个电影我已经看过了。 吃水果对身体好。 我想要一杯咖啡。 我希望你早点来北京。 请你再说一遍。 他今天非常忙。 这儿的东西很便宜。 过两天是我的生日。 我的手机是新买的。 今天我想吃米饭。 他正要去坐出租车。 请说得慢一点。 这是我姐姐的男朋友。`,
+`别在看书时吃东西。 他还没有回来。 我和他都喜欢跳舞。 从这儿到学校不远。 我会说一点汉语。 这本书很有意思。 火车是从北京开来的。 这是最新的电影。 欢迎你来我家玩儿。 从这儿向左走两分钟就到了。 谢谢你对我们的帮助。 你对我们真是太好了。 今天我不去游泳了。 已经7点35分了。 我的儿子六岁了。`];
+/* perguntas 16–25: pergunta|resposta simples  (* = confira/ajuste seus dados) */
+const QT=[
+`明天天气怎么样？|明天天气很好，有点儿热。
+你家有几口人？|我家有四口人，爸爸、妈妈、姐姐和我。*
+你在哪个学校上学？|我在圣保罗州立大学上学。
+你喜欢看电视吗？|喜欢，我也喜欢看电影。
+你每天几点睡觉？|我每天十一点睡觉。
+我喜欢白色，你呢？|我也喜欢白色。
+你去过北京吗？|我没去过北京，我很想去。
+星期天你都干什么？|星期天我在家休息，有时候去游泳。
+你会做饭吗？|我会做一点儿饭。
+你喜欢小狗吗？|我喜欢小狗，它们很可爱。`,
+`你身体好吗？|我身体很好，谢谢。
+你喜欢你的汉语老师吗？|喜欢，我的汉语老师很好。
+你有中国朋友吗？|我没有中国朋友，但是我想有。
+这个星期天我们去商店，你呢？|我不去商店，我去游泳。
+你喜欢看电影吗？|喜欢，我学习电影。
+你几岁了？|我今年二十岁了。*
+你的生日是几月几号？|我的生日是五月十号。*
+你喜欢听什么音乐？|我喜欢听流行音乐。
+你去过长城吗？|我没去过长城。
+你晚上几点吃饭？|我晚上七点吃饭。`,
+`你每天学习几个小时？|我每天学习三个小时。
+你工作了吗？|我工作了，也在学习。
+你觉得北京怎么样？|我没去过，但是我觉得北京很大，很漂亮。
+我喜欢小狗，你呢？|我也喜欢小狗。
+今天星期几？|今天星期天。*
+你怎么去学校？|我坐公共汽车去学校。
+你常跟朋友聊天吗？|我常常跟朋友聊天。
+你爸爸身体好吗？|我爸爸身体很好。
+这个周末你做什么？|这个周末我去游泳。
+你有很多朋友吗？|我有很多朋友。`,
+`你会写毛笔字吗？|我不会写毛笔字，我会写汉字。
+你喜欢游泳吗？|我很喜欢游泳，我常常去游泳。
+我喜欢吃水果，你呢？|我也喜欢吃水果。
+早上你几点起床？|我早上七点起床。
+星期六你做什么？|星期六我去游泳，然后在家休息。
+你喜欢吃中国菜吗？|我喜欢吃中国菜。
+你现在住在哪里？|我住在巴西圣保罗州。
+你的汉语怎么样？|我的汉语还可以，我每天学习。
+你去过中国哪些地方？|我没去过中国。
+你爸爸是做什么的？|我爸爸是老师。`,
+`你有中国朋友吗？|我没有中国朋友，但是我想有。
+你家有几口人？|我家有四口人。
+你喜欢打篮球吗？|我不太喜欢打篮球，我喜欢游泳。
+你们家谁最高？|我爸爸最高。*
+你喜欢什么样的天气？|我喜欢不冷也不热的天气。
+今天几号？|今天十一月二十九号。
+今天星期一吗？|不是，今天星期天。
+明天是几月几号？|明天是十一月三十号。
+你游泳怎么样？|我游得不错，我很喜欢游泳。
+你的生日是几月几号？|我的生日是五月十号。*`,
+`你喜欢哪个杯子？|我喜欢那个白色的杯子。
+你会骑自行车吗？|我会骑自行车。
+你喜欢运动吗？|我喜欢运动，特别是游泳。
+今天早上你吃了什么？|今天早上我吃了面包，喝了咖啡。
+你喜欢喝茶吗？|我喜欢喝茶，也喜欢喝咖啡。
+你明天要去哪？|我明天要去学校。
+明天我们去看电影怎么样？|好啊，我们一起去。
+你喜欢什么运动？|我最喜欢游泳。
+你游泳游得怎么样？|我游得很好。
+你明天什么时候考试？|我明天上午考试。`,
+`在你们国家什么运动最受欢迎？|在巴西，足球最受欢迎。
+下午下课后你干什么？|下课后我回家，然后学习汉语。
+你每天几点回家？|我每天六点回家。
+你的衣服在哪里买的？|我的衣服是在商店买的。
+一杯咖啡多少钱？|一杯咖啡十块钱。
+你的学校怎么样？|我的学校很大，也很漂亮。
+你会做菜吗？|我会做一点儿菜。
+你每天用电脑多长时间？|我每天用电脑八个小时。
+你爸妈身体好吗？|我爸妈身体都很好。
+下午我要去商店，你呢？|我下午去游泳。`,
+`你和同学的关系怎么样？|我和同学的关系很好。
+你什么时候去火车站？|我下午三点去火车站。
+你喜欢吃中国菜吗？|喜欢，中国菜很好吃。
+你常常运动吗？|我常常运动，每个星期游泳。
+现在是什么季节？|现在是春天。
+你去过别的国家吗？|我没去过别的国家，我想去中国。
+你什么颜色的衣服最多？|我黑色的衣服最多。
+你每天睡几个小时？|我每天睡七个小时。
+我爱喝茶，你呢？|我也爱喝茶。
+最近天气怎样？|最近天气很热。`];
+/* temas 26–27: prova|tipo|tema|tradução|exemplo (personalizado) */
+const TPT=`1|lugar|请介绍一下你的学校。|Apresente sua escola.|我在圣保罗州立大学上学。我的学校在包鲁，很大，也很漂亮。学校里有图书馆和运动场。老师们很好，同学们也很热情。我很喜欢我的学校。
+1|opiniao|什么样的朋友才是真的“好朋友”？|Que tipo de amigo é um verdadeiro “bom amigo”?|我觉得真正的好朋友应该这样：我高兴的时候，他和我一起高兴；我难过的时候，他会在我身边。每个人都有很多朋友，但是好朋友不多。所以我很爱我的好朋友。
+2|opiniao|老师，这个工作怎么样？为什么？|Professor: como é esse trabalho? Por quê?|我觉得老师这个工作很好。我的爸爸妈妈都是老师，我很了解这个工作。老师可以教学生很多东西，也可以自己学习新东西。可是老师很忙，也很累。所以我觉得这个工作很有意思。
+2|opiniao|你觉得快乐和钱的多少有关系吗？|A felicidade tem relação com a quantidade de dinheiro?|我觉得快乐和钱有一点儿关系。因为有钱可以让生活更舒服。但是钱不是最重要的。朋友、家人和身体好也带来快乐。所以快乐不只是钱。
+3|gosto|请介绍一下你喜欢的一种运动。|Apresente um esporte de que você gosta.|我最喜欢游泳。我常常去游泳，有时候和朋友一起去。游泳不仅让我的身体很健康，也让我很高兴。夏天游泳特别舒服。所以我很喜欢游泳。
+3|presente|你朋友结婚，你会送什么礼物？|Que presente você daria no casamento de um amigo?|朋友结婚，我会送他们一个冰箱。因为冰箱很有用，每个家都需要。他们可以放水果和牛奶。我也会说：祝你们幸福！
+4|pessoa|请介绍一下你的家庭。|Apresente sua família.|我家有四口人：爸爸、妈妈、姐姐和我。我的爸爸妈妈都是老师，我和姐姐是大学生。我们常常一起吃饭。我很爱我的家庭。
+4|gosto|你在大学学什么？为什么？|O que você estuda na faculdade? Por quê?|我在大学学习电影。我觉得这个专业很有意思。我选择它是因为我喜欢看电影，也喜欢做视频。而且我觉得电影可以让人很高兴。我的梦想是做电影。
+5|pessoa|请介绍一个你的同学。|Apresente um colega.|我想介绍我的同学，她叫Mai。她是巴西人。她学习很努力，成绩也很好。她常常帮助我。我们常常一起吃饭，她是我的好朋友。
+5|opiniao|你喜欢坐什么车去上学或上班？为什么？|Que veículo você prefere para ir à escola ou ao trabalho? Por quê?|我喜欢坐公共汽车去学校。因为公共汽车很便宜，也很方便。可是有时候人很多。所以我早一点儿出门。
+6|pessoa|请介绍一下你的妈妈。|Apresente sua mãe.|我的妈妈是老师。她很温柔，也很爱我。她喜欢做饭，做的菜很好吃。她常常帮助我。我爱我的妈妈。
+6|opiniao|医生，这个工作怎么样？为什么？|Médico: como é esse trabalho? Por quê?|医生这个工作很好，可是很忙。医生可以帮助病人。想成为医生要学习很多年。医生的工作非常重要。所以我觉得医生很了不起。
+7|fala|中国人打电话时，常说的话是什么？|O que os chineses costumam dizer ao telefone?|中国人打电话时，先说“喂”。然后说：“你好，我是……”。有时候他们会问：“你找谁？”最后他们说“再见”。
+7|gosto|你喜欢什么运动？为什么？|De que esporte você gosta? Por quê?|我最喜欢的运动是游泳。因为游泳很有意思，也不难。我可以在游泳池里游泳，也可以在海边游泳。游泳让我的身体很健康。游完泳我觉得很舒服。
+8|lugar|请介绍一个你最喜欢的饭馆。|Apresente seu restaurante favorito.|我最喜欢家附近的一个饭馆。那里的菜又便宜又好吃。服务员很热情，饭馆也很干净。我常常和朋友一起去那里吃饭。
+8|opiniao|学汉语，你觉得什么最难？为什么？|No estudo do chinês, o que é mais difícil? Por quê?|我觉得声调最难。因为汉语有四个声调。有时候我分不清第三声和第四声。说错声调，别人就听不懂。所以我每天都练习声调。
+8|lugar|请介绍一下你的房间。|Apresente seu quarto.|我的房间不大，但是很干净。房间里有一张床、一张桌子和一台电脑。窗户旁边有很多书。我很喜欢我的房间。
+8|gosto|你最喜欢什么动物？为什么？|Qual é seu animal favorito? Por quê?|我最喜欢的动物是狗。狗很可爱，也很友好。它们是人类最好的朋友。狗也很聪明。所以我很喜欢狗。`;
+const AB=[['你叫什么名字？','我叫欧凯。'],['你是哪国人？','我是巴西人。'],['你的序号是多少？','我的序号是十二。（troque pelo seu número）']];
+const TIPS={
+opiniao:['Opinião → razão → contraste → conclusão',['我觉得……  (sua opinião, direto)','因为……  (1 ou 2 motivos; use 也 para somar)','但是 / 可是……  (o outro lado)','所以……  (fecho curto)'],'我觉得……。因为……，也……。但是……。所以……。'],
+pessoa:['Quem é → dados → qualidades → relação',['我想介绍……，她/他叫……','她/他是……人 / 是……  (origem, profissão)','她/他很……，也很……  (duas qualidades)','我们常常……  / 我爱……  (fecho)'],'我想介绍……，他/她叫……。他/她是……。他/她很……，也很……。我们常常……。'],
+lugar:['Nome/onde → como é → o que tem → fecho',['我（最喜欢 / 在）……','……很大 / 很漂亮 / 又……又……','……里有……和……','我很喜欢……  (fecho)'],'我最喜欢……。……很……，也很……。……里有……和……。我很喜欢……。'],
+gosto:['O que gosto → por quê → exemplo → resultado',['我最喜欢……','因为……  (um motivo simples)','我常常…… / 我可以……  (exemplo)','……让我很……  / 所以我很喜欢……'],'我最喜欢……。因为……。我常常……。……让我很……。所以我很喜欢……。'],
+fala:['Sequência: primeiro → depois → por fim',['先说“喂”','然后说“你好，我是……”','有时候问“你找谁？”','最后说“再见”'],'先……。然后……。有时候……。最后……。'],
+presente:['Presente → motivo → uso → desejo',['我会送……','因为……很有用','他们可以……','祝你们幸福！  (fecho)'],'我会送……。因为……。他们可以……。祝你们幸福！']};
+const REQ={opiniao:[['我觉得'],['因为'],['但是','可是'],['所以']],pessoa:[['叫','是'],['很'],['也'],['常常','经常']],lugar:[['有'],['很'],['也','又'],['喜欢']],gosto:[['最喜欢','喜欢'],['因为'],['常','可以'],['所以','让']],fala:[['喂'],['然后'],['最后','再见']],presente:[['送'],['因为'],['可以'],['祝']]};
+/* ---------- estruturas ---------- */
+const REP=[];RT.forEach((t,i)=>t.split(' ').forEach((z,j)=>REP.push({id:'r'+(i+1)+'-'+(j+1),t:i+1,n:j+1,z})));
+const QA=[];QT.forEach((t,i)=>t.trim().split('\n').forEach((l,j)=>{const p=l.split('|'),a=p[1]||'';QA.push({id:'q'+(i+1)+'-'+(16+j),t:i+1,n:16+j,z:p[0],a:a.replace(/\*$/,''),f:/\*$/.test(a)})}));
+const TP=TPT.split('\n').map((l,i)=>{const p=l.split('|');return{id:'t'+i,t:+p[0],ty:p[1],z:p[2],pt:p[3],m:p[4]}});
+try{Object.assign(XP,{香:'xiāng',柔:'róu',稳:'wěn',尊:'zūn',刺:'cì',激:'jī',培:'péi',精:'jīng',神:'shén',爽:'shuǎng',呼:'hū',吸:'xī',备:'bèi',设:'shè',殊:'shū',架:'jià',桌:'zhuō',植:'zhí',盆:'pén',窗:'chuāng',专:'zhuān',择:'zé',梦:'mèng',软:'ruǎn',堵:'dǔ',欧:'ōu',凯:'kǎi',序:'xù',饺:'jiǎo',圣:'shèng',包:'bāo',鲁:'lǔ',泳:'yǒng',毛:'máo',温:'wēn',柔:'róu',谐:'xié'})}catch(e){}
+/* ---------- estado ---------- */
+const SK='hsk3hk6';let ST={};try{ST=JSON.parse(localStorage.getItem(SK)||'{}')||{}}catch(e){}
+ST.m=ST.m||{};ST.t=ST.t||{};ST.p=ST.p||{};
+const sv=()=>{try{localStorage.setItem(SK,JSON.stringify(ST))}catch(e){}};
+try{const o=JSON.parse(localStorage.getItem('hsk3plan')||'{}')||{};if(o.d!=='2026-11-29'){o.d='2026-11-29';localStorage.setItem('hsk3plan',JSON.stringify(o))}}catch(e){}
+const F6={rp:0,an:0},RS={},RN={};let tI=0,tm=null;
+const el=k=>document.getElementById('k6c-'+k);
+const py=z=>{try{return pyl(z)}catch(e){return ''}};
+const sayB=z=>`<button data-s="${esc(z)}" onclick="say(this.dataset.s)">🔊</button>`;
+const ans=x=>ST.m[x.id]||x.a;
+const hz=s=>(String(s).match(/[\u4e00-\u9fff]/g)||[]).length;
+const dl=()=>{const n=new Date();return Math.round((new Date(2026,10,29)-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/864e5)};
+const hero=(t,s)=>{const d=dl(),x=d>1?'faltam '+d+' dias':d==1?'é amanhã':d==0?'é hoje':'';return `<div class="hero"><div class="hero-s">🎤 Treino HSKK${x?' · prova 29/11 · '+x:''}</div><div class="hero-t">${t}</div><div class="mut">${s}</div></div>`};
+const chips=k=>`<div class="row" style="justify-content:flex-start">${['Todas',1,2,3,4,5,6,7,8].map(v=>{const f=v==='Todas'?0:v;return `<button class="${F6[k]==f?'on':''}" onclick="k6f('${k}',${f})">${v==='Todas'?'Todas':'Prova '+v}</button>`}).join('')}</div>`;
+/* ---------- rodadas (sem repetir; erradas voltam) ---------- */
+window.k6f=(k,f)=>{F6[k]=f;RN[k]()};
+window.k6rr=k=>{const pool=(k=='rp'?REP:QA).filter(x=>!F6[k]||x.t==F6[k]);RS[k]={q:sh(pool.slice()).slice(0,k=='rp'?15:10),err:0,len:0};RS[k].len=RS[k].q.length;k6step(k)};
+window.k6step=k=>{const r=RS[k],b=document.getElementById('k6rd-'+k);if(!b)return;
+ if(!r.q.length){b.innerHTML=`<div class="card"><b>Rodada concluída</b><div class="mut">${r.len} item(ns) · ${r.err} erro(s) (voltaram durante a rodada).</div><div class="row"><button class="pri" onclick="k6rr('${k}')">Nova rodada</button></div></div>`;return}
+ const x=r.cur=r.q[0];say(x.z);
+ b.innerHTML=`<div class="card"><div class="mut">${k=='rp'?'Ouça e repita em voz alta':'Ouça e responda em voz alta, frase completa'} · restam ${r.q.length}</div><div class="row"><button class="pri" onclick="k6say('${k}')">🔊 De novo</button><button onclick="k6show('${k}',1)">👁 Texto</button>${k=='an'?`<button onclick="k6show('an',2)">💡 Resposta modelo</button>`:''}</div><div id="k6rv-${k}"></div><div class="row"><button class="pri" onclick="k6g('${k}',1)">✓ ${k=='rp'?'Repeti bem':'Respondi bem'}</button><button onclick="k6g('${k}',0)">✗ Travei, voltar depois</button></div></div>`};
+window.k6say=k=>say(RS[k].cur.z);
+window.k6show=(k,m)=>{const x=RS[k].cur,b=document.getElementById('k6rv-'+k);let h=`<div style="font-size:22px">${esc(x.z)}</div><div class="py">${esc(py(x.z))}</div>`;
+ if(m==2){const a=ans(x);h+=`<hr><div class="mut">Resposta modelo</div><div style="font-size:22px">${esc(a)} ${sayB(a)}</div><div class="py">${esc(py(a))}</div>`}b.innerHTML=h};
+window.k6g=(k,ok)=>{const r=RS[k],x=r.cur;r.q.shift();const p=ST.p[x.id]||(ST.p[x.id]={a:0,e:0});
+ if(ok)p.a++;else{p.e++;r.err++;r.q.splice(Math.min(3,r.q.length),0,x)}sv();try{bump();save()}catch(e){}k6step(k)};
+/* ---------- Repetir ---------- */
+RN.rp=function(){const pool=REP.filter(x=>!F6.rp||x.t==F6.rp);
+ el('rp').innerHTML=hero('Repetir frases',`${REP.length} frases das 8 provas do arquivo (Parte 1, 15 por prova).`)+chips('rp')+
+ `<div class="row"><button class="pri" onclick="k6rr('rp')">🎧 Rodada de 15 ${F6.rp?'(prova '+F6.rp+')':'(sorteio)'}</button></div><div id="k6rd-rp"></div><div class="mut" style="margin:8px 2px">${pool.length} frase(s) · toque em 🔊 e repita em voz alta, como no exame.</div>`+
+ pool.map(x=>{const p=ST.p[x.id];return `<div class="item"><span class="tg">P${x.t}·${x.n}</span>${p?` <span class="tg">✓${p.a} ✗${p.e}</span>`:''}<div style="font-size:22px">${esc(x.z)} ${sayB(x.z)}</div><div class="py">${esc(py(x.z))}</div></div>`}).join('')};
+/* ---------- Responder ---------- */
+RN.an=function(){const pool=QA.filter(x=>!F6.an||x.t==F6.an);
+ el('an').innerHTML=hero('Responder perguntas',`${QA.length} perguntas das 8 provas (16–25), com resposta simples. Respostas com ✎ usam dados que você deve conferir (idade, aniversário, irmã).`)+
+ `<details><summary>Abertura fixa (3 perguntas)</summary>${AB.map(a=>`<div class="item"><div style="font-size:20px">${esc(a[0])} ${sayB(a[0])}</div><div style="font-size:20px">${esc(a[1])} ${sayB(a[1])}</div></div>`).join('')}</details>`+chips('an')+
+ `<div class="row"><button class="pri" onclick="k6rr('an')">🎙 Rodada de 10 ${F6.an?'(prova '+F6.an+')':'(sorteio)'}</button></div><div id="k6rd-an"></div><div class="mut" style="margin:8px 2px">${pool.length} pergunta(s) · ouça, responda em voz alta e depois abra a resposta simples.</div>`+
+ pool.map(x=>{const a=ans(x),p=ST.p[x.id],my=!!ST.m[x.id];return `<div class="item"><span class="tg">P${x.t}·${x.n}</span>${p?` <span class="tg">✓${p.a} ✗${p.e}</span>`:''}${x.f&&!my?' <span class="tg er">✎ ajuste</span>':''}${my?' <span class="tg s3">minha versão</span>':''}<div style="font-size:21px">${esc(x.z)} ${sayB(x.z)}</div><div class="py">${esc(py(x.z))}</div><details><summary>💬 Resposta simples</summary><div style="font-size:21px">${esc(a)} ${sayB(a)}</div><div class="py">${esc(py(a))}</div><div class="row" style="justify-content:flex-start"><button onclick="k6ed('${x.id}')">✎ Minha versão</button>${my?`<button onclick="k6rs('${x.id}')">↺ Original</button>`:''}</div></details></div>`}).join('')};
+window.k6ed=id=>{const x=QA.find(q=>q.id==id);if(!x)return;const v=prompt('Sua resposta em chinês:',ans(x));if(v===null)return;const t=v.trim();if(t)ST.m[id]=t;else delete ST.m[id];sv();RN.an()};
+window.k6rs=id=>{delete ST.m[id];sv();RN.an()};
+/* ---------- Temas ---------- */
+RN.tp=function(){const t=TP[tI];if(tm){clearInterval(tm);tm=null}
+ el('tp').innerHTML=hero('Temas para falar (Partes 26–27)',`Escreva sua resposta, peça dicas de estrutura e depois veja um exemplo. Meta: 60–100 hanzi, cerca de 1,5 min.`)+
+ `<select class="in" onchange="k6ti(this.value)">${TP.map((x,i)=>`<option value="${i}" ${i==tI?'selected':''}>${i+1}. P${x.t} · ${esc(x.z)}</option>`).join('')}</select>`+
+ `<div class="card" style="text-align:left"><div style="font-size:24px">${esc(t.z)} ${sayB(t.z)}</div><div class="py">${esc(py(t.z))}</div><div class="mut">${esc(t.pt)}</div></div>`+
+ `<textarea id="k6ta" class="k6t" placeholder="Escreva sua resposta em hanzi…" oninput="k6inp(this)">${esc(ST.t[t.id]||'')}</textarea><div class="mut" id="k6cn">${hz(ST.t[t.id]||'')} hanzi</div>`+
+ `<div class="row"><button onclick="k6tips()">💡 Dicas de estrutura</button><button onclick="k6model()">👁 Ver exemplo</button><button onclick="k6hear()">🔊 Ouvir minha resposta</button><button onclick="k6chk()">✅ Conferir estrutura</button></div>`+
+ `<div class="row"><button id="k6tm" onclick="k6tm()">⏱ 1:30</button><button onclick="k6rnd()">🎲 Sortear tema</button></div><div id="k6fb"></div><div id="k6tips"></div><div id="k6md"></div>`};
+window.k6ti=v=>{tI=+v;RN.tp()};window.k6rnd=()=>{let n;do{n=Math.random()*TP.length|0}while(n==tI&&TP.length>1);tI=n;RN.tp()};
+window.k6inp=e=>{ST.t[TP[tI].id]=e.value;sv();document.getElementById('k6cn').textContent=hz(e.value)+' hanzi'};
+window.k6hear=()=>{const v=document.getElementById('k6ta').value.trim();if(v)say(v)};
+window.k6tips=()=>{const b=document.getElementById('k6tips');if(b.innerHTML){b.innerHTML='';return}const T=TIPS[TP[tI].ty];
+ b.innerHTML=`<div class="fbx" style="text-align:left"><b>${T[0]}</b>${T[1].map((s,i)=>`<div style="margin-top:4px">${i+1}. ${esc(s)}</div>`).join('')}<div style="margin-top:8px" class="mut">Molde para preencher</div><div style="font-size:20px">${esc(T[2])}</div><div class="mut" style="margin-top:6px">Dica geral: frases curtas que você domina, sem parar; se travar, volte a 我觉得 / 因为 / 所以.</div></div>`};
+window.k6model=()=>{const b=document.getElementById('k6md');if(b.innerHTML){b.innerHTML='';return}const m=TP[tI].m;
+ b.innerHTML=`<div class="fbx" style="text-align:left"><b>Exemplo</b> ${sayB(m)}<div style="font-size:21px;line-height:1.7;margin-top:6px">${esc(m)}</div><div class="py">${esc(py(m))}</div><div class="mut">${hz(m)} hanzi · compare com a sua versão e adapte.</div></div>`};
+window.k6chk=()=>{const t=TP[tI],v=document.getElementById('k6ta').value,b=document.getElementById('k6fb');if(!v.trim()){b.innerHTML='<div class="fbx warn">Escreva sua resposta antes de conferir.</div>';return}
+ const n=hz(v),rows=REQ[t.ty].map(a=>`<div>${a.some(w=>v.includes(w))?'✓':'✗'} ${a.join(' / ')}</div>`).join('');
+ b.innerHTML=`<div class="fbx" style="text-align:left"><b>${n} hanzi</b> · ${n<40?'curto: tente chegar a 60–100':n>140?'longo: corte detalhes':'bom tamanho'}${/[A-Za-z]{2,}/.test(v)?'<div class="mut">Há letras latinas; use hanzi (nomes próprios podem ficar).</div>':''}<div style="margin-top:6px">${rows}</div><div class="mut">Conferência automática: só vê se os elementos aparecem, não corrige gramática.</div></div>`};
+window.k6tm=()=>{const e=document.getElementById('k6tm');if(tm){clearInterval(tm);tm=null;e.textContent='⏱ 1:30';return}let s=90;e.textContent='⏸ 1:30';
+ tm=setInterval(()=>{const b=document.getElementById('k6tm');if(!b){clearInterval(tm);tm=null;return}s--;b.textContent='⏸ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(s<=0){clearInterval(tm);tm=null;b.textContent='⏱ Tempo!'}},1000)};
+/* ---------- menu e navegação ---------- */
+const SECS=[['rp','🔁','Repetir (arquivo)'],['an','💬','Responder (com modelo)'],['tp','📝','Temas (escrever)']];
+const st=document.createElement('style');st.textContent='body[data-nav="k6"] #meta{display:none}.k6t{width:100%;min-height:150px;font:inherit;font-size:20px;line-height:1.6;padding:10px;margin:8px 0 2px;border-radius:12px;border:1px solid var(--ln);background:var(--card);color:var(--fg)}';document.head.appendChild(st);
+const main=document.querySelector('main');
+SECS.forEach(s=>{const e=document.createElement('section');e.id='k6-'+s[0];e.className='sec';e.innerHTML='<div id="k6c-'+s[0]+'"></div>';main.appendChild(e)});
+document.getElementById('dw').insertAdjacentHTML('beforeend','<h3>🎤 Treino HSKK</h3>'+SECS.map(s=>`<button data-k6="${s[0]}"><span class="ic">${s[1]}</span>${s[2]}</button>`).join(''));
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-k6]');if(!b)return;const id=b.dataset.k6,s=SECS.find(x=>x[0]==id);
+ nav=-98;document.querySelectorAll('.sec').forEach(x=>x.classList.remove('on'));document.getElementById('k6-'+id).classList.add('on');
+ document.querySelectorAll('#dw button').forEach(x=>x.classList.toggle('on',x===b));document.getElementById('ttl').textContent='🎤 '+s[2];
+ document.body.dataset.nav='k6';dwt(0);try{window.scrollTo(0,0)}catch(_){}RN[id]()});
+}catch(e){fail(e)}
+})();
 </script>
